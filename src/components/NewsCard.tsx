@@ -9,11 +9,19 @@ export interface Post {
 
 const NewsCard: React.FC<{ post: Post }> = ({ post }) => {
   return (
-    <article className="rounded-xl overflow-hidden shadow-md">
-      <img src={post.image} alt={post.title} className="w-full h-40 object-cover" />
-      <div className="bg-primary px-4 py-2">
-        <p className="text-white text-sm opacity-80">{post.tag} • {post.time}</p>
-        <h3 className="text-white font-semibold">{post.title}</h3>
+    <article className="bg-white rounded-xl overflow-hidden border shadow-sm flex flex-col">
+      <img
+        src={post.image}
+        alt={post.title}
+        className="w-full h-40 object-cover"
+      />
+      <div className="p-4 flex-1 flex flex-col">
+        <p className="text-xs text-gray-500 font-medium mb-2">
+          {post.tag} • {post.time}
+        </p>
+        <h3 className="text-primary font-semibold text-lg flex-1">
+          {post.title}
+        </h3>
       </div>
     </article>
   );

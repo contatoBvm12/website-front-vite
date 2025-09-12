@@ -26,11 +26,43 @@ const posts: Post[] = [
 
 const Home: React.FC = () => {
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
+      <section className="bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 py-12 flex flex-col lg:flex-row items-center gap-8">
+          <div className="flex-1 space-y-4 text-center lg:text-left">
+            <span className="text-sm font-semibold text-secondary tracking-wide uppercase">
+              Atualizações ESG
+            </span>
+            <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight">
+              Notícias, dados e visão do mercado verde
+            </h1>
+            <p className="text-gray-600 max-w-xl mx-auto lg:mx-0">
+              Acompanhe os principais movimentações de mercado ESG, índices proprietários e análises da BVM12 em um só lugar.
+            </p>
+          </div>
+          <div className="w-full max-w-sm bg-white shadow rounded-lg p-6">
+            <dl className="space-y-4">
+              <div className="flex justify-between">
+                <dt className="font-medium text-gray-600">BVM12</dt>
+                <dd className="text-right">
+                  <div className="text-lg font-semibold text-primary">1.352,7</div>
+                  <div className="text-sm text-green-600">+12,3%</div>
+                </dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="font-medium text-gray-600">ESG</dt>
+                <dd className="text-right">
+                  <div className="text-lg font-semibold text-primary">US$ 89,51</div>
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
       <Ticker />
-      <section className="container mx-auto px-4 py-8">
-        <h2 className="text-2xl font-semibold mb-4">Notícias</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <section className="max-w-7xl mx-auto px-4 py-8">
+        <h2 className="text-2xl font-semibold mb-6 text-primary">Notícias</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((post, index) => (
             <NewsCard key={index} post={post} />
           ))}
