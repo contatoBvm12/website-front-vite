@@ -19,8 +19,52 @@ const Footer: React.FC = () => {
         <div>
           <h3 className="text-lg font-semibold mb-4">Siga-nos</h3>
           <ul className="space-y-2 text-sm">
-            <li><a href="https://www.instagram.com/bvm12" className="hover:underline" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-            <li><a href="https://www.linkedin.com/company/bvm12" className="hover:underline" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+            <li>
+              <a
+                href="https://www.instagram.com/bvm12"
+                className="flex items-center hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg
+                  className="h-4 w-4 mr-2"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
+                </svg>
+                Instagram
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.linkedin.com/company/bvm12"
+                className="flex items-center hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg
+                  className="h-4 w-4 mr-2"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-14h4z" />
+                  <rect x="2" y="9" width="4" height="12" />
+                  <circle cx="4" cy="4" r="2" />
+                </svg>
+                LinkedIn
+              </a>
+            </li>
           </ul>
         </div>
         <div>
@@ -36,7 +80,7 @@ const Footer: React.FC = () => {
             <span className="font-semibold">bvm 12</span>
           </div>
           <p className="text-center flex-1">
-            Copyright © BVM12 - Plataforma de Captação para Startups Ltda. CNPJ 38.730.632/0001-83 | Designed by Flying Kite
+            Copyright © BVM12 - Bolsa Verde de Manaus Ltda. CNPJ 38.730.632/0001-83 | Designed by Fennec Developer
           </p>
         </div>
       </div>
