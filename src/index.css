@@ -7,6 +7,6 @@
   100% { transform: translateX(-100%); }
 }
 
-.marquee {
+.animate-marquee {
   animation: marquee 30s linear infinite;
 }
