@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 /**
  * Header component with the BVM12 logo, title and navigation links.
@@ -15,19 +15,39 @@ const Header: React.FC = () => {
             <p className="text-xs sm:text-sm">ESG • Mercado & Notícias</p>
           </div>
         </div>
-        <nav className="space-x-4 text-sm">
-          <Link to="/" className="hover:underline">
+        <nav className="flex gap-4 text-sm">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `px-3 py-1 rounded ${isActive ? 'bg-white text-primary' : 'hover:bg-white/20'}`
+            }
+          >
             Início
-          </Link>
-          <Link to="/login" className="hover:underline">
+          </NavLink>
+          <NavLink
+            to="/login"
+            className={({ isActive }) =>
+              `px-3 py-1 rounded ${isActive ? 'bg-white text-primary' : 'hover:bg-white/20'}`
+            }
+          >
             Área do Cliente
-          </Link>
-          <Link to="/register-user" className="hover:underline">
+          </NavLink>
+          <NavLink
+            to="/register-user"
+            className={({ isActive }) =>
+              `px-3 py-1 rounded ${isActive ? 'bg-white text-primary' : 'hover:bg-white/20'}`
+            }
+          >
             Cadastro de Usuário
-          </Link>
-          <Link to="/register-company" className="hover:underline">
+          </NavLink>
+          <NavLink
+            to="/register-company"
+            className={({ isActive }) =>
+              `px-3 py-1 rounded ${isActive ? 'bg-white text-primary' : 'hover:bg-white/20'}`
+            }
+          >
             Cadastro de Empresa
-          </Link>
+          </NavLink>
         </nav>
       </div>
     </header>

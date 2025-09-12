@@ -31,7 +31,7 @@ const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 py-12 flex flex-col lg:flex-row items-center gap-8">
           <div className="flex-1 space-y-4 text-center lg:text-left">
             <span className="text-sm font-semibold text-secondary tracking-wide uppercase">
-              Atualizações ESG
+              Atualizações B3G
             </span>
             <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight">
               Notícias, dados e visão do mercado verde
@@ -40,22 +40,31 @@ const Home: React.FC = () => {
               Acompanhe os principais movimentações de mercado ESG, índices proprietários e análises da BVM12 em um só lugar.
             </p>
           </div>
-          <div className="w-full max-w-sm bg-white shadow rounded-lg p-6">
-            <dl className="space-y-4">
-              <div className="flex justify-between">
-                <dt className="font-medium text-gray-600">BVM12</dt>
+          <div className="w-full max-w-md bg-white shadow rounded-lg p-6">
+            <dl className="divide-y divide-gray-200">
+              <div className="flex justify-between pb-4">
+                <dt className="font-medium text-gray-600">BVM12 ESG</dt>
                 <dd className="text-right">
                   <div className="text-lg font-semibold text-primary">1.352,7</div>
                   <div className="text-sm text-green-600">+12,3%</div>
                 </dd>
               </div>
-              <div className="flex justify-between">
-                <dt className="font-medium text-gray-600">ESG</dt>
+              <div className="flex justify-between py-4">
+                <dt className="font-medium text-gray-600">Green Term (B3G)</dt>
+                <dd className="text-right">
+                  <div className="text-lg font-semibold text-primary">+12,3%</div>
+                </dd>
+              </div>
+              <div className="flex justify-between pt-4">
+                <dt className="font-medium text-gray-600">Preço do Carbono</dt>
                 <dd className="text-right">
                   <div className="text-lg font-semibold text-primary">US$ 89,51</div>
                 </dd>
               </div>
             </dl>
+            <p className="mt-4 text-xs text-gray-500">
+              Dados fictícios e variações nas cotações.
+            </p>
           </div>
         </div>
       </section>
