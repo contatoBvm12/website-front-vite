@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
 /**
@@ -14,22 +14,13 @@ const Header: React.FC = () => {
           </Link>
         </div>
         <nav className="flex gap-4 text-sm">
-          <Link
-            to="/#sobre-nos"
-            className="px-3 py-1 rounded hover:bg-white/20 transition-colors"
-          >
+          <Link to="/sobre" className="px-3 py-1 rounded hover:bg-white/20 transition-colors">
             Sobre Nós
           </Link>
-          <Link
-            to="/#produtos"
-            className="px-3 py-1 rounded hover:bg-white/20 transition-colors"
-          >
+          <Link to="/#produtos" className="px-3 py-1 rounded hover:bg-white/20 transition-colors">
             Produtos
           </Link>
-          <Link
-            to="/#metodologias"
-            className="px-3 py-1 rounded hover:bg-white/20 transition-colors"
-          >
+          <Link to="/#metodologias" className="px-3 py-1 rounded hover:bg-white/20 transition-colors">
             Metodologias
           </Link>
           <NavLink

@@ -514,7 +514,7 @@ const Home: React.FC = () => {
       
 
 
-      <section className="bg-[#0b1220] text-white py-6">
+      <section className="bg-[#eeeee] text-white py-6">
         <div className="max-w-7xl mx-auto px-4 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-semibold">Filmes e Séries</h2>
