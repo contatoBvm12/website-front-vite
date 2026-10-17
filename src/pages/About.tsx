@@ -3,9 +3,9 @@ import React from 'react';
 const About: React.FC = () => (
   <main>
     <section className="campo-marinho bg-marinho text-white">
-      <div className="contenedor py-20 md:py-28">
+      <div className="contenedor py-[var(--sala-y)]">
         <p className="olho text-verde">Sobre a BVM12</p>
-        <h1 className="titulo mt-6 max-w-[17ch] text-[clamp(40px,5.6vw,88px)]">
+        <h1 className="titulo mt-6 max-w-[17ch] text-[clamp(40px,min(5.6vw,11svh),88px)]">
           Infraestrutura para transformar sustentabilidade em classe de ativo.
         </h1>
         <p className="mt-8 max-w-[44ch] font-serif text-[clamp(20px,1.7vw,25px)] leading-snug text-white/80">
@@ -53,8 +53,8 @@ const About: React.FC = () => (
     </section>
 
     <section className="bg-verde text-marinho">
-      <div className="contenedor py-20 md:py-28">
-        <blockquote className="titulo max-w-[17ch] text-[clamp(36px,5vw,78px)]">
+      <div className="contenedor py-[var(--sala-y)]">
+        <blockquote className="titulo max-w-[17ch] text-[clamp(36px,min(5vw,10svh),78px)]">
           Porque, para nós, futuro sustentável não é discurso: é classe de ativo.
         </blockquote>
       </div>

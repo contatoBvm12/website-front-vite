@@ -19,14 +19,14 @@ const FormPage: React.FC<{ eyebrow: string; title: string; intro: string; fields
   submitLabel,
 }) => (
   <main className="bg-nevoa">
-    <div className="contenedor py-16 md:py-24">
+    <div className="contenedor py-[var(--sala-y)]">
       <Link to="/login" className="olho text-ardosia hover:text-marinho">
         ← Área do Cliente
       </Link>
       <div className="mt-10 grid gap-x-16 gap-y-10 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <p className="olho text-ardosia">{eyebrow}</p>
-          <h1 className="titulo mt-4 text-[clamp(38px,4.4vw,62px)]">{title}</h1>
+          <h1 className="titulo mt-4 text-[clamp(38px,min(4.4vw,9svh),62px)]">{title}</h1>
           <p className="mt-5 max-w-[32ch] font-serif text-[19px] leading-snug text-ardosia">{intro}</p>
         </div>
         <form className="lg:col-span-8">

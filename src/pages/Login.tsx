@@ -11,14 +11,14 @@ const Login: React.FC = () => {
     <main className="grid min-h-[calc(100svh-64px)] lg:grid-cols-2">
       <section className="campo-marinho hidden flex-col justify-between bg-marinho px-[var(--margem)] py-14 text-white lg:flex">
         <p className="olho text-verde">Área do Cliente</p>
-        <Tela fundo="#4ADE80" cor="#142B4D" className="pendurada block h-auto w-[min(28vw,360px)] self-center" />
+        <Tela fundo="#4ADE80" cor="#142B4D" className="pendurada block h-auto w-[min(28vw,360px,44svh)] self-center" />
         <p className="titulo max-w-[13ch] text-[clamp(32px,3vw,46px)]">Mercado verde, todo dia.</p>
       </section>
 
       <section className="flex items-center bg-nevoa px-[var(--margem)] py-16">
         <div className="mx-auto w-full max-w-[26rem]">
           <p className="olho text-ardosia lg:hidden">Área do Cliente</p>
-          <h1 className="titulo mt-3 text-[clamp(40px,4.2vw,58px)] lg:mt-0">Entrar</h1>
+          <h1 className="titulo mt-3 text-[clamp(40px,min(4.2vw,9svh),58px)] lg:mt-0">Entrar</h1>
           <p className="mt-3 font-serif text-[19px] text-ardosia">Faça seu login em nossa rede.</p>
 
           <form className="mt-10 space-y-6">

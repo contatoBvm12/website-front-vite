@@ -28,7 +28,7 @@ const Article: React.FC<{
             <span className="inline-block h-2.5 w-2.5 bg-verde ring-1 ring-marinho/20" aria-hidden="true" />
             {section}
           </p>
-          <h1 className="manchete mt-5 text-[clamp(36px,4.6vw,62px)]">{title}</h1>
+          <h1 className="manchete mt-5 text-[clamp(36px,min(4.6vw,9svh),62px)]">{title}</h1>
           <p className="mt-6 font-serif text-[clamp(20px,1.6vw,24px)] italic leading-snug text-ardosia">{dek}</p>
           <p className="olho mt-8 border-t border-marinho/20 pt-4 text-ardosia">
             {byline} · {date} · {readTime}

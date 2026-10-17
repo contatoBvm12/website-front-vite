@@ -11,6 +11,14 @@
 :root {
   --margem: clamp(20px, 5.5vw, 88px);
   --topo: 64px;
+  /*
+   * Notebook é largo e baixo (1280 × 590 a 150%): o que é grande — título, número, arte, o ar entre as salas — cresce
+   * pela largura E pela altura, o que for menor. Em monitor grande nada muda; no notebook a sala cabe na tela.
+   */
+  --sala-y: clamp(48px, 11svh, 112px);
+  --sala-vao: clamp(28px, 6svh, 48px);
+  /* A borda esquerda do contenedor, para o que sangra até a janela (fileira de filmes, díptico). cqw: sem a barra de rolagem. */
+  --borda: max(var(--margem), (100cqw - 1320px) / 2);
 }
 
 @layer base {
@@ -39,6 +47,16 @@
 
   .sublinhado { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 5px; }
   .sublinhado:hover { text-decoration-thickness: 3px; }
+
+  /*
+   * A fileira de filmes: começa na margem do contenedor, e as obras cabem inteiras nele (1, 2 ou 3 por vez); a seguinte
+   * espia pela borda direita, avisando que tem mais.
+   */
+  .fileira { container-type: inline-size; }
+  .fileira-trilho { padding-inline: var(--borda); scroll-padding-inline: var(--borda); }
+  .fileira-obra { width: min(82cqw, 400px); }
+  @media (min-width: 768px) { .fileira-obra { width: calc((min(100cqw - 2 * var(--margem), 1320px) - 2rem) / 2); } }
+  @media (min-width: 1024px) { .fileira-obra { width: calc((min(100cqw - 2 * var(--margem), 1320px) - 4rem) / 3); } }
 
   /* O número é a imagem: cabe no quadro pelo container (cqw) */
   .obra-numero { container-type: inline-size; }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 /*
  * Peças da galeria: a etiqueta de parede, o cabeçalho de cada sala, a obra em que o número é a imagem e a linha de
@@ -48,22 +48,42 @@ export const RoomHeader: React.FC<{
   >
     <div>
       <p className="olho opacity-80">Sala {number}</p>
-      <h2 className="titulo mt-3 text-[clamp(36px,4.6vw,66px)]">{title}</h2>
+      <h2 className="titulo mt-3 text-[clamp(36px,min(4.6vw,8.6svh),66px)]">{title}</h2>
     </div>
     {children}
   </div>
 );
 
-/** Setas para rolar uma fileira de obras. */
+/** Setas para rolar uma fileira de obras: uma obra por clique (a largura do cartão mais o vão); apagam nas pontas. */
 export const ScrollArrows: React.FC<{ target: string; label: string }> = ({ target, label }) => {
-  const go = (dx: number) => document.getElementById(target)?.scrollBy({ left: dx, behavior: 'smooth' });
-  const cls = 'grid h-11 w-11 place-items-center border border-current text-lg transition-colors hover:bg-white hover:text-marinho';
+  const [ends, setEnds] = useState({ start: true, end: false });
+  useEffect(() => {
+    const row = document.getElementById(target);
+    if (!row) return;
+    const update = () =>
+      setEnds({ start: row.scrollLeft <= 4, end: row.scrollLeft + row.clientWidth >= row.scrollWidth - 4 });
+    update();
+    row.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => {
+      row.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, [target]);
+  const go = (dir: number) => {
+    const row = document.getElementById(target);
+    const card = row?.firstElementChild as HTMLElement | null | undefined;
+    if (!row || !card) return;
+    row.scrollBy({ left: dir * (card.offsetWidth + (parseFloat(getComputedStyle(row).columnGap) || 0)), behavior: 'smooth' });
+  };
+  const cls =
+    'grid h-11 w-11 place-items-center border border-current text-lg transition-colors hover:bg-white hover:text-marinho disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-current';
   return (
     <div className="flex gap-2">
-      <button type="button" className={cls} onClick={() => go(-320)} aria-label={`${label}: anteriores`}>
+      <button type="button" className={cls} onClick={() => go(-1)} disabled={ends.start} aria-label={`${label}: anteriores`}>
         ←
       </button>
-      <button type="button" className={cls} onClick={() => go(320)} aria-label={`${label}: próximos`}>
+      <button type="button" className={cls} onClick={() => go(1)} disabled={ends.end} aria-label={`${label}: próximos`}>
         →
       </button>
     </div>
@@ -86,14 +106,16 @@ export const NewsArtwork: React.FC<{
   credit?: string;
   /** Altura mínima da faixa (ex.: 'min-h-[31cqw]'): numa fileira, as manchetes começam na mesma linha. */
   bandClass?: string;
+  /** Classes do quadro da imagem (ex.: um teto de altura em tela baixa; a foto recorta pelo centro). */
+  imageClass?: string;
   className?: string;
-}> = ({ image, alt, outline = '', solid, caption, field = 'marinho', ratio = '4 / 3', credit = 'Ilustração BVM12', bandClass = '', className = '' }) => {
+}> = ({ image, alt, outline = '', solid, caption, field = 'marinho', ratio = '4 / 3', credit = 'Ilustração BVM12', bandClass = '', imageClass = '', className = '' }) => {
   const chars = (outline + solid).length;
   const size = Math.min(15, 62 / (0.7 * chars));
   const strong = field === 'marinho' ? '#4ADE80' : '#142B4D';
   return (
     <figure className={`obra-numero ${className}`}>
-      <div className="overflow-hidden bg-marinho" style={{ aspectRatio: ratio }}>
+      <div className={`w-full overflow-hidden bg-marinho ${imageClass}`} style={{ aspectRatio: ratio }}>
         <img src={image} alt={alt} loading="lazy" className="h-full w-full object-cover" />
       </div>
       <div className={`flex flex-col justify-between gap-[1.6cqw] px-[4.5cqw] pb-[4cqw] pt-[3.4cqw] ${bandClass} ${field === 'marinho' ? 'bg-marinho' : 'bg-verde'}`}>

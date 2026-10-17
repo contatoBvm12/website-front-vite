@@ -143,18 +143,23 @@ const Home: React.FC = () => {
     <main>
       <Ticker />
 
-      {/* Entrada: díptico — o título na parede verde; à direita, o encontro das águas enorme, sangrando pelas bordas */}
-      <section className="grid overflow-hidden bg-verde text-marinho lg:min-h-[calc(100svh-106px)] lg:grid-cols-2">
-        <div className="flex flex-col justify-center py-16 pl-[max(var(--margem),calc((100vw-1320px)/2))] pr-[var(--margem)] lg:py-20 lg:pr-14">
+      {/*
+        Entrada: díptico — o título na parede verde; à direita, o encontro das águas enorme, sangrando pelas bordas.
+        Cabe na tela abaixo do cabeçalho e das cotações (106 px). No notebook o título é medido também pela altura, e a
+        parede verde fica mais larga (7/5) para as três frases caberem numa linha cada.
+      */}
+      <section className="grid overflow-hidden bg-verde text-marinho [container-type:inline-size] lg:min-h-[calc(100svh-106px)] lg:grid-cols-2 notebook:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+        <div className="flex flex-col justify-center py-16 pl-[var(--borda)] pr-[var(--margem)] lg:py-[clamp(32px,5.5svh,72px)] lg:pr-14">
           <p className="olho">Manaus, {today}</p>
-          <h1 className="titulo mt-6 text-[clamp(44px,5.2vw,92px)]">
-            <span className="block">Futuro sustentável não é discurso.</span>
+          <h1 className="titulo mt-[clamp(16px,3svh,24px)] text-[clamp(44px,min(5.2vw,10.4svh),92px)]">
+            <span className="block">Futuro sustentável</span>
+            <span className="block">não é discurso.</span>
             <span className="block">É classe de ativo.</span>
           </h1>
-          <p className="mt-8 max-w-[30ch] font-serif text-[clamp(20px,1.6vw,25px)] leading-snug">
+          <p className="mt-[clamp(20px,4svh,32px)] max-w-[30ch] font-serif text-[clamp(18px,min(1.6vw,3.6svh),25px)] leading-snug">
             Mercado, notícias e índices da economia verde, a partir de Manaus.
           </p>
-          <a href="#destaque" className="olho mt-10 inline-flex items-center gap-3 self-start border-b-2 border-marinho pb-1.5">
+          <a href="#destaque" className="olho mt-[clamp(24px,5svh,40px)] inline-flex items-center gap-3 self-start border-b-2 border-marinho pb-1.5">
             Comece a visita <span aria-hidden="true">↓</span>
           </a>
         </div>
@@ -178,15 +183,16 @@ const Home: React.FC = () => {
       </section>
 
       {/* Sala 01 · Em destaque */}
-      <section id="destaque" className="scroll-mt-16 bg-nevoa py-20 md:py-28">
+      {/* As salas não levam scroll-mt: o scroll-padding-top do html já desconta o cabeçalho (somados, sobrava uma faixa da sala anterior). */}
+      <section id="destaque" className="bg-nevoa py-[var(--sala-y)]">
         <div className="contenedor">
           <RoomHeader number="01" title="Em destaque" />
-          <div className="mt-12 grid gap-x-14 gap-y-10 lg:grid-cols-12 lg:items-center">
+          <div className="mt-[var(--sala-vao)] grid gap-x-14 gap-y-10 lg:grid-cols-12 lg:items-start">
             <article className="lg:col-span-6">
               <p className="olho text-ardosia">
                 {featured.section} · <time dateTime={featured.date}>{featured.dateLabel}</time>
               </p>
-              <h3 className="manchete mt-5 text-[clamp(34px,3.9vw,58px)]">{featured.title}</h3>
+              <h3 className="manchete mt-5 text-[clamp(34px,min(3.9vw,7.4svh),58px)]">{featured.title}</h3>
               <p className="leitura mt-6 text-ardosia">{featured.summary}</p>
               {featured.aside && <p className="leitura mt-4 italic text-ardosia">{featured.aside}</p>}
               <Sources sources={featured.sources} className="mt-8" />
@@ -199,6 +205,7 @@ const Home: React.FC = () => {
                 solid={featured.figure.solid}
                 caption={featured.figure.caption}
                 field={featured.field}
+                imageClass="notebook:max-h-[42svh]"
               />
             </div>
           </div>
@@ -206,16 +213,20 @@ const Home: React.FC = () => {
       </section>
 
       {/* Sala 02 · O índice */}
-      <section id="indice" className="campo-marinho scroll-mt-16 bg-marinho py-20 text-white md:py-28">
+      {/*
+        O número e as estatísticas ao lado do gráfico; as moedas numa faixa embaixo. Antes a tabela de moedas ficava na
+        coluna do número, o gráfico esticava até a altura dela e passava da tela no notebook.
+      */}
+      <section id="indice" className="campo-marinho bg-marinho py-[var(--sala-y)] text-white">
         <div className="contenedor">
           <RoomHeader number="02" title="O índice" tone="escuro">
             <p className="olho text-white/60">{last ? `Referência de ${ddmm(last.date)}` : 'Referência diária'}</p>
           </RoomHeader>
-          <div className="mt-12 grid gap-x-16 gap-y-12 lg:grid-cols-12">
+          <div className="mt-[var(--sala-vao)] grid gap-x-16 gap-y-12 lg:grid-cols-12">
             {/* O número herói mede a própria coluna (cqw), não a janela: em tela larga ele não invade o gráfico. */}
             <div className="[container-type:inline-size] lg:col-span-6 xl:col-span-5">
               <p className="olho text-verde">Índice PLF · Palafita</p>
-              <p className="titulo-largo mt-5 whitespace-nowrap text-[min(19cqw,132px)] tabular-nums">
+              <p className="titulo-largo mt-[clamp(12px,2.4svh,20px)] whitespace-nowrap text-[min(19cqw,132px,16svh)] tabular-nums">
                 {last ? (
                   <>
                     <span className="contorno" style={{ WebkitTextStrokeColor: '#fff' }}>R$ </span>
@@ -230,9 +241,9 @@ const Home: React.FC = () => {
                   {plfChange < 0 ? '▼' : '▲'} {pct(plfChange)} no dia
                 </p>
               )}
-              <dl className="mt-10 border-t border-white/15 font-mono text-[14px]">
+              <dl className="mt-[clamp(24px,4.5svh,40px)] border-t border-white/15 font-mono text-[14px]">
                 {marketStats.map((s) => (
-                  <div key={s.label} className="flex items-baseline justify-between gap-4 border-b border-white/15 py-3.5">
+                  <div key={s.label} className="flex items-baseline justify-between gap-4 border-b border-white/15 py-3.5 notebook:py-3">
                     <dt className="text-white/65">{s.label}</dt>
                     <dd className="tabular-nums">
                       {s.value} {s.change && <span className="ml-1 text-verde">▲ {s.change}</span>}
@@ -240,52 +251,55 @@ const Home: React.FC = () => {
                   </div>
                 ))}
               </dl>
-              <table className="mt-8 w-full font-mono text-[14px]">
-                <caption className="sr-only">Moedas e ativos verdes</caption>
-                <tbody>
-                  {movers.map((m) => (
-                    <tr key={m.code} className="border-t border-white/15 last:border-b">
-                      <td className="w-16 py-3.5 text-verde">{m.code}</td>
-                      <td className="py-3.5 font-sans text-[15px] text-white/80">{m.label}</td>
-                      <td className="py-3.5 text-right tabular-nums">{m.value}</td>
-                      <td className={`w-24 py-3.5 text-right tabular-nums ${m.positive ? 'text-verde' : 'text-queda'}`}>{m.change}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
             </div>
-            <div className="flex flex-col lg:col-span-6 xl:col-span-7">
-              <figure className="flex flex-1 flex-col">
-                {days.length > 1 && (
-                  <p className="mb-3 text-right font-mono text-[12px] text-white/60">máx. {brl(Math.max(...days.map((d) => d.plf)))}</p>
-                )}
-                <div className="relative h-[260px] lg:h-auto lg:min-h-[320px] lg:flex-1">
-                  <PalafitaChart days={days} />
-                </div>
-                {days.length > 1 && (
-                  <p className="mt-2 flex justify-between font-mono text-[12px] text-white/60">
-                    <span>{ddmm(days[0].date)}</span>
-                    <span>{ddmm(days[days.length - 1].date)}</span>
+            {/* O gráfico acompanha a altura da coluna do número (com piso), nunca a ultrapassa. */}
+            <figure className="flex flex-col lg:col-span-6 xl:col-span-7">
+              {days.length > 1 && (
+                <p className="mb-3 text-right font-mono text-[12px] text-white/60">
+                  máx. {brl(Math.max(...days.map((d) => d.plf)))} · mín. {brl(Math.min(...days.map((d) => d.plf)))}
+                </p>
+              )}
+              <div className="relative h-[240px] lg:h-auto lg:min-h-[200px] lg:flex-1">
+                <PalafitaChart days={days} />
+              </div>
+              {days.length > 1 && (
+                <p className="mt-2 flex justify-between font-mono text-[12px] text-white/60">
+                  <span>{ddmm(days[0].date)}</span>
+                  <span>{ddmm(days[days.length - 1].date)}</span>
+                </p>
+              )}
+              <figcaption className="mt-3 font-mono text-[11.5px] uppercase tracking-[0.06em] text-white/55">
+                Últimos 30 dias úteis · cotações de referência do Banco Central Europeu (Frankfurter)
+              </figcaption>
+            </figure>
+            {/* As moedas e ativos verdes, numa faixa: um quadro por ativo, lado a lado no desktop. */}
+            <ul aria-label="Moedas e ativos verdes" className="grid gap-x-8 font-mono text-[14px] sm:grid-cols-2 lg:col-span-12 lg:grid-cols-4">
+              {movers.map((m) => (
+                <li key={m.code} className="border-t border-white/15 py-4">
+                  <p className="flex items-baseline gap-3">
+                    <span className="text-verde">{m.code}</span>
+                    <span className="font-sans text-[15px] text-white/80">{m.label}</span>
                   </p>
-                )}
-                <figcaption className="mt-3 font-mono text-[11.5px] uppercase tracking-[0.06em] text-white/55">
-                  Últimos 30 dias úteis · cotações de referência do Banco Central Europeu (Frankfurter)
-                </figcaption>
-              </figure>
-            </div>
+                  <p className="mt-2 flex items-baseline justify-between gap-4 tabular-nums">
+                    <span className="text-[19px]">{m.value}</span>
+                    <span className={m.positive ? 'text-verde' : 'text-queda'}>{m.change}</span>
+                  </p>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
 
       {/* Sala 03 · Notícias */}
-      <section id="noticias" className="scroll-mt-16 bg-nevoa py-20 md:py-28">
+      <section id="noticias" className="bg-nevoa py-[var(--sala-y)]">
         <div className="contenedor">
           <RoomHeader number="03" title="Notícias">
             <p className="max-w-[38ch] font-serif text-[18px] leading-snug text-ardosia">
               O que move a economia verde, em resumos da redação com link para a fonte.
             </p>
           </RoomHeader>
-          <div className="mt-14 grid gap-x-10 gap-y-16 md:grid-cols-6">
+          <div className="mt-[var(--sala-vao)] grid gap-x-10 gap-y-16 md:grid-cols-6">
             {news.map((item, i) => (
               <div key={item.id} className={i < 2 ? 'md:col-span-3' : 'md:col-span-2'}>
                 <NewsCard item={item} ratio={i < 2 ? '16 / 9' : '4 / 3'} bandClass={i < 2 ? 'min-h-[25cqw]' : 'md:min-h-[32cqw]'} />
@@ -309,18 +323,18 @@ const Home: React.FC = () => {
       </section>
 
       {/* Sala 04 · Para assistir */}
-      <section className="campo-marinho bg-marinho py-20 text-white md:py-28">
+      <section className="campo-marinho fileira bg-marinho py-[var(--sala-y)] text-white">
         <div className="contenedor">
           <RoomHeader number="04" title="Para assistir" tone="escuro">
             <ScrollArrows target="projecao" label="Filmes e séries" />
           </RoomHeader>
-          <p className="mt-6 max-w-[46ch] font-serif text-[19px] leading-snug text-white/80">
+          <p className="mt-[clamp(16px,3svh,24px)] max-w-[46ch] text-pretty font-serif text-[19px] leading-snug text-white/80">
             Filmes e séries sobre clima, floresta e o que fazemos com eles.
           </p>
         </div>
-        <div id="projecao" className="sem-barra mt-12 flex snap-x snap-mandatory gap-8 overflow-x-auto scroll-px-[var(--margem)] px-[var(--margem)] pb-2">
+        <div id="projecao" className="fileira-trilho sem-barra mt-[var(--sala-vao)] flex snap-x snap-mandatory gap-8 overflow-x-auto pb-2">
           {streamingCollection.map((item) => (
-            <article key={item.id} className="w-[min(82vw,400px)] shrink-0 snap-start">
+            <article key={item.id} className="fileira-obra shrink-0 snap-start">
               <figure>
                 <div className="aspect-video overflow-hidden bg-white/5">
                   <img src={item.image} alt={`Arte de divulgação de ${item.title}`} loading="lazy" className="h-full w-full object-cover" />
@@ -336,19 +350,18 @@ const Home: React.FC = () => {
               <p className="mt-2 font-serif text-[16.5px] leading-snug text-white/75">{item.description}</p>
             </article>
           ))}
-          <div className="w-px shrink-0" aria-hidden="true" />
         </div>
       </section>
 
       {/* Sala 05 · Para cozinhar */}
-      <section className="bg-verde py-20 text-marinho md:py-28">
+      <section className="bg-verde py-[var(--sala-y)] text-marinho">
         <div className="contenedor">
           <RoomHeader number="05" title="Para cozinhar">
             <p className="max-w-[36ch] font-serif text-[19px] leading-snug">
               Pratos de cozinhas que vivem da floresta em pé: Amazônia, Bacia do Congo e a milpa mexicana.
             </p>
           </RoomHeader>
-          <div className="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-[var(--sala-vao)] grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
             {recipes.map((r) => (
               <article key={r.title}>
                 <div className="moldura">
