@@ -2,15 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-@keyframes marquee {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+/*
+ * BVM12 · a galeria. Marca recriada (deliverables/bvm12-marca/MARCA.md): marinho e verde em campos chapados, névoa
+ * para ler. A galeria fala em Archivo larga (salas, títulos, números); o jornal fala em Newsreader (manchetes e texto
+ * de ler); etiquetas e cotações em IBM Plex Mono. Verde nunca é texto sobre névoa; vermelho só em número negativo,
+ * sobre marinho.
+ */
+:root {
+  --margem: clamp(20px, 5.5vw, 88px);
+  --topo: 64px;
 }
 
-.animate-marquee {
-  animation: marquee 30s linear infinite;
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: var(--topo); -webkit-text-size-adjust: 100%; }
+  body { @apply bg-nevoa font-sans text-marinho antialiased; font-optical-sizing: auto; }
+  ::selection { background: #4ADE80; color: #142B4D; }
+  :focus-visible { outline: 3px solid #142B4D; outline-offset: 3px; }
+  .campo-marinho :focus-visible { outline-color: #4ADE80; }
 }
 
-.hide-scrollbar::-webkit-scrollbar { display: none; }
-.hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+@layer components {
+  .contenedor { width: min(100% - 2 * var(--margem), 1320px); margin-inline: auto; }
 
+  /* A galeria */
+  .titulo { font-weight: 800; font-stretch: 112%; letter-spacing: -0.035em; line-height: 0.98; }
+  .titulo-largo { font-weight: 800; font-stretch: 125%; letter-spacing: -0.055em; line-height: 0.9; }
+  .olho { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; }
+
+  /* O jornal */
+  .manchete { font-family: 'Newsreader', Georgia, serif; font-weight: 600; letter-spacing: -0.012em; line-height: 1.08; }
+  .leitura { font-family: 'Newsreader', Georgia, serif; font-size: clamp(18px, 1.3vw, 20.5px); line-height: 1.62; }
+
+  /* Obras na parede: passe-partout branco e a sombra de quem está pendurado */
+  .moldura { background: #fff; padding: clamp(8px, 0.9vw, 14px); box-shadow: 0 1px 0 rgba(20, 43, 77, 0.06), 0 28px 50px -34px rgba(20, 43, 77, 0.55); }
+  .pendurada { box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08), 0 44px 70px -40px rgba(10, 22, 40, 0.8); }
+
+  .sublinhado { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 5px; }
+  .sublinhado:hover { text-decoration-thickness: 3px; }
+
+  /* O número é a imagem: cabe no quadro pelo container (cqw) */
+  .obra-numero { container-type: inline-size; }
+  .contorno { color: transparent; -webkit-text-stroke-width: 0.03em; }
+
+  /* Corpo das matérias */
+  .materia > * + * { margin-top: 1.05em; }
+  .materia h2 { font-family: 'Archivo', Arial, sans-serif; font-weight: 800; font-stretch: 112%; letter-spacing: -0.02em; font-size: 1.3em; line-height: 1.15; margin-top: 2.2em; color: #142B4D; }
+  .materia ul { list-style: none; padding: 0; }
+  .materia li { position: relative; padding-left: 1.3em; }
+  .materia li + li { margin-top: 0.55em; }
+  .materia li::before { content: ''; position: absolute; left: 0; top: 0.62em; width: 0.4em; height: 0.4em; background: #142B4D; }
+  .materia strong { font-weight: 650; color: #142B4D; }
+}
+
+/* Cotações correndo: quatro cópias, anda metade (duas cópias) e recomeça sem emenda */
+@keyframes correr { to { transform: translateX(-50%); } }
+.correr { display: flex; width: max-content; animation: correr 70s linear infinite; }
+.correr:hover { animation-play-state: paused; }
+
+.sem-barra { scrollbar-width: none; }
+.sem-barra::-webkit-scrollbar { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .correr { animation: none; }
+}

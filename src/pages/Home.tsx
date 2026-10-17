@@ -1,645 +1,370 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Ticker from '../components/Ticker';
 import NewsCard from '../components/NewsCard';
-import type { Post } from '../components/NewsCard';
+import { NewsArtwork, RoomHeader, ScrollArrows, Sources, WallLabel } from '../components/Gallery';
+import Encontro from '../marca/Encontro';
+import { archive, featured, news } from '../data/news';
 
-const featuredPost = {
-  tag: 'COP30 em foco',
-  title: 'COP30 transforma Belém em vitrine da Amazônia',
-  summary:
-    'Belém vive o maior teste logístico e reputacional de sua história para sustentar o discurso brasileiro de liderança climática.',
-  image: '/cop30.png',
-  to: '/noticias/cop30'
-};
+/*
+ * A home é uma galeria: a entrada (díptico: o título na parede verde, o encontro das águas no painel marinho) e cinco salas numeradas,
+ * alternando campos chapados de marinho e verde com a névoa para ler. Cada obra tem a sua etiqueta de parede.
+ */
 
-const posts: Post[] = [
-  {
-    tag: 'COP30',
-    time: '10 nov 2025',
-    title: 'COP30 transforma Belém em vitrine da Amazônia',
-    image: '/cop30.png',
-    to: '/noticias/cop30'
-  },
-  {
-    tag: 'Mobilidade',
-    time: 'ha 1h',
-    title: 'GoMoov e 99Food levam bicicletas eletricas para entregadores em Goiania',
-    image: '/gomoov-99food.png',
-    to: '/noticias/gomoov-99food'
-  },
-  {
-    tag: 'Mercado',
-    time: 'há 2h',
-    title: 'Mercado reage às notícias do dia',
-    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    tag: 'ESG',
-    time: 'ontem',
-    title: 'Sustentabilidade nas empresas: tendências',
-    image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80'
-  }
-];
-
-const videos = [
-  {
-    title: 'Horizonte de Altitude',
-    year: 2024,
-    genres: 'Drama · Ação',
-    rating: 4.7,
-    image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=500&q=80'
-  },
-  {
-    title: 'Neon sobre Areia',
-    year: 2023,
-    genres: 'Comédia · Romance',
-    rating: 4.4,
-    image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=500&q=80'
-  },
-  {
-    title: 'Orquestra de Aço',
-    year: 2022,
-    genres: 'Ação · Sci-Fi',
-    rating: 4.6,
-    image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=500&q=80'
-  },
-  {
-    title: 'Avenida do Tempo',
-    year: 2024,
-    genres: 'Drama',
-    rating: 4.3,
-    image: 'https://images.unsplash.com/photo-1482192597420-4817fdd7e8b0?auto=format&fit=crop&w=500&q=80'
-  },
-  {
-    title: 'Céus Elétricos',
-    year: 2021,
-    genres: 'Sci-Fi · Suspense',
-    rating: 4.5,
-    image: 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?auto=format&fit=crop&w=500&q=80'
-  }
-];
-
-const recipes = [
-  {
-    title: 'Peru assado com alho dourado',
-    duration: '3h 15min',
-    category: 'Principal',
-    rating: '4.5 (120)',
-    image: 'https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?auto=format&fit=crop&w=700&q=80'
-  },
-  {
-    title: 'Batatas doces recheadas',
-    duration: '1h 40min',
-    category: 'Acompanhamento',
-    rating: '4.0 (62)',
-    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=700&q=80'
-  },
-  {
-    title: 'Couve refogada com páprica',
-    duration: '1h 15min',
-    category: 'Veggie',
-    rating: '4.1 (31)',
-    image: 'https://images.unsplash.com/photo-1505253758473-96b7015fcd40?auto=format&fit=crop&w=700&q=80'
-  },
-  {
-    title: 'Pie de nozes e manteiga',
-    duration: '1h 30min',
-    category: 'Sobremesa',
-    rating: '3.9 (143)',
-    image: 'https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?auto=format&fit=crop&w=700&q=80'
-  }
-];
-
+// Títulos conferidos em 17/10/2026 nas páginas oficiais brasileiras (Disney+, Apple TV); imagens de divulgação das
+// plataformas, com crédito. Os nomes são os da arte oficial no Brasil.
 const streamingCollection = [
-  {
-    id: 1,
-    platform: 'Apple TV+',
-    type: 'Série',
-    title: 'The Wild Ones',
-    description: 'Conservação de espécies ameaçadas e proteção da vida selvagem.',
-    image: '/imagem01.png'
-  },
-  {
-    id: 2,
-    platform: 'Netflix',
-    type: 'Filme',
-    title: "Don't Look Up",
-    description: 'Sátira sobre crise climática, negação científica e inação corporativa.',
-    image: '/imagem02.png'
-  },
-  {
-    id: 3,
-    platform: 'Prime Video',
-    type: 'Série',
-    title: 'Climate Next',
-    description: 'Histórias, ideias e tecnologias que constroem um futuro de baixo carbono.',
-    image: '/imagem03.png'
-  },
-  {
-    id: 4,
-    platform: 'Disney+',
-    type: 'Filme',
-    title: 'Before the Flood',
-    description: 'Leonardo DiCaprio viaja o mundo mostrando os impactos do aquecimento.',
-    image: '/imagem04.png'
-  },
-  {
-    id: 5,
-    platform: 'Apple TV+',
-    type: 'Filme',
-    title: 'The Year Earth Changed',
-    description: 'Como a natureza respondeu durante os lockdowns globais.',
-    image: 'https://images.unsplash.com/photo-1482192597420-4817fdd7e8b0?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 6,
-    platform: 'Netflix',
-    type: 'Série',
-    title: 'Our Planet',
-    description: 'Série documental sobre biodiversidade e transformação climática.',
-    image: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 7,
-    platform: 'Prime Video',
-    type: 'Filme',
-    title: 'Sustainable',
-    description: 'Agricultura regenerativa, solo, água e cadeias de alimentos resilientes.',
-    image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 8,
-    platform: 'Disney+',
-    type: 'Série',
-    title: 'Secrets of the Penguins',
-    description: 'Espécies de pinguins, seus habitats e ameaças do clima.',
-    image: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80'
-  }
+  { id: 'territorio', platform: 'Disney+', type: 'Filme', title: 'O Território', description: 'O povo Uru-eu-wau-wau enfrenta invasores e desmatamento numa área protegida da Amazônia; boa parte das imagens foi filmada pelos próprios indígenas.', image: '/fotos/assistir-territorio.jpg' },
+  { id: 'extrapolations', platform: 'Apple TV+', type: 'Série', title: 'Extrapolations: Um Futuro Inquietante', description: 'Oito histórias interligadas, ao longo de 33 anos, mostram como a mudança do clima vai mexer com família, trabalho e fé.', image: '/fotos/assistir-extrapolations.jpg' },
+  { id: 'attenborough', platform: 'Netflix', type: 'Filme', title: 'David Attenborough e Nosso Planeta', description: 'O naturalista revê a própria carreira, o que viu a natureza perder ao longo de uma vida e como ela pode se recuperar.', image: '/fotos/assistir-attenborough.jpg' },
+  { id: 'seremos-historia', platform: 'Disney+', type: 'Filme', title: 'Seremos História?', description: 'Leonardo DiCaprio vai à linha de frente da crise do clima e conversa com quem está no centro da causa.', image: '/fotos/assistir-before-the-flood.jpg' },
+  { id: 'ano-terra', platform: 'Apple TV+', type: 'Filme', title: 'O Ano em que a Terra Mudou', description: 'Com narração de David Attenborough, mostra como a natureza reagiu quando o mundo parou na pandemia.', image: '/fotos/assistir-ano-terra.jpg' },
+  { id: 'solo-fertil', platform: 'Prime Video', type: 'Filme', title: 'Solo Fértil', description: 'Cientistas, agricultores e ativistas defendem a recuperação do solo como ferramenta contra a mudança do clima.', image: '/fotos/assistir-solo-fertil.jpg' },
+  { id: 'artico', platform: 'Disney+', type: 'Filme', title: 'Ártico Ameaçado', description: 'Com a mudança do clima no Ártico, os povos indígenas da região lutam pela terra e pelo mar de que dependem.', image: '/fotos/assistir-last-ice.jpg' },
+  { id: 'curta-essa', platform: 'Netflix', type: 'Série', title: 'Curta Essa com Zac Efron', description: 'Zac Efron e o especialista em bem-estar Darin Olien rodam o mundo atrás de jeitos mais saudáveis e sustentáveis de viver.', image: '/fotos/assistir-zac-efron.jpg' },
 ];
 
+// Cozinhas que vivem da floresta em pé. Fotos geradas para a BVM12 no campo de cor da marca.
+const recipes = [
+  { title: 'Tacacá', place: 'Amazônia brasileira', description: 'Caldo de tucupi com goma de tapioca, jambu e camarão seco, servido quente na cuia.', image: '/fotos/receita-tacaca.jpg' },
+  { title: 'Juane', place: 'Amazônia peruana', description: 'Arroz com cúrcuma, frango, ovo e azeitona, cozido em folha de bijao; o prato da festa de San Juan.', image: '/fotos/receita-juane.jpg' },
+  { title: 'Liboké de peixe', place: 'Bacia do Congo', description: 'Peixe de rio com tomate, cebola e pimenta, cozido no vapor dentro de folhas, com chikwangue de mandioca.', image: '/fotos/receita-liboke.jpg' },
+  { title: 'Sopa de milpa', place: 'México', description: 'Milho, abóbora, flor de abóbora e feijão: os frutos da milpa, o roçado consorciado que alimenta a Mesoamérica há milênios.', image: '/fotos/receita-milpa.jpg' },
+];
+
+// Valores fixos, os mesmos do site anterior.
 const marketStats = [
   { label: 'Taxa DI 14/11', value: '14,90%' },
   { label: 'Índice DI 17/11', value: '53.363,71' },
-  { label: 'S&P/B3 IBO VIX', value: '17,67', change: '+0,4%' }
+  { label: 'S&P/B3 IBO VIX', value: '17,67', change: '+0,4%' },
 ];
+const staticMovers = [{ code: 'MPA', label: 'Árvores Plantadas (MPA)', value: '2.345.890', change: '+3,1%', positive: true }];
 
-const staticMovers = [
-  { code: 'MPA', label: 'Árvores Plantadas (MPA)', value: '2.345.890', change: '+3,1%', positive: true }
-];
+type Day = { date: string; usd: number; eur: number; plf: number };
 
-const Home: React.FC = () => {
-  const [usdRate, setUsdRate] = useState<string>('Carregando...');
-  const [usdNumeric, setUsdNumeric] = useState<number | null>(null);
-  const [eurRate, setEurRate] = useState<string>('Carregando...');
-  const [eurNumeric, setEurNumeric] = useState<number | null>(null);
-  const [usdChange, setUsdChange] = useState<string>('');
-  const [eurChange, setEurChange] = useState<string>('');
-  const [plfValue, setPlfValue] = useState<number | null>(null);
-  const [plfChange, setPlfChange] = useState<string>('');
-  const [plfHistory, setPlfHistory] = useState<Array<{ time: number; value: number }>>([]);
+// Índice PLF = 0,5 × dólar + 0,35 × euro + 0,15 × crédito de carbono VE (dólar × 12) — a mesma conta do site anterior.
+const plfOf = (usd: number, eur: number) => 0.5 * usd + 0.35 * eur + 0.15 * (usd * 12);
+// A AwesomeAPI do site anterior passou a recusar (cota esgotada, sem CORS); a Frankfurter dá a referência diária do BCE.
+const RATES_URL = 'https://api.frankfurter.dev/v1';
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const stored = localStorage.getItem('plfHistory');
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          setPlfHistory(parsed);
-          if (parsed.length) {
-            setPlfValue(parsed[parsed.length - 1].value);
-          }
-        }
-      } catch {
-    localStorage.removeItem('plfHistory');
-      }
-    }
-  }, []);
+const brl = (v: number) => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const pct = (v: number) =>
+  `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
+const ddmm = (iso: string) => `${iso.slice(8, 10)}/${iso.slice(5, 7)}`;
 
-  useEffect(() => {
-    const fetchRates = async () => {
-      try {
-        const response = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL');
-        const data = await response.json();
-        const usdValue = Number(data?.USDBRL?.bid);
-        const eurValue = Number(data?.EURBRL?.bid);
-
-        if (!Number.isNaN(usdValue)) {
-          setUsdNumeric(usdValue);
-          setUsdRate(`R$ ${usdValue.toFixed(2)}`);
-          const variation = Number(data.USDBRL.pctChange);
-          setUsdChange(`${variation > 0 ? '+' : ''}${variation.toFixed(2)}%`);
-        }
-        if (!Number.isNaN(eurValue)) {
-          setEurNumeric(eurValue);
-          setEurRate(`R$ ${eurValue.toFixed(2)}`);
-          const variation = Number(data.EURBRL.pctChange);
-          setEurChange(`${variation > 0 ? '+' : ''}${variation.toFixed(2)}%`);
-        }
-
-        if (!Number.isNaN(usdValue) && !Number.isNaN(eurValue)) {
-          const carbon = usdValue * 12;
-          const plf = 0.5 * usdValue + 0.35 * eurValue + 0.15 * carbon;
-          setPlfValue(plf);
-          setPlfHistory((prev) => {
-            const entry = { time: Date.now(), value: Number(plf.toFixed(6)) };
-            let base = prev;
-            if (!base.length) {
-              const start = entry.time - 19 * 60 * 1000;
-              base = Array.from({ length: 20 }, (_, i) => ({
-                time: start + i * 60 * 1000,
-                value: entry.value
-              }));
-            }
-            const seed = [...base, entry];
-            const trimmed = seed.slice(-120);
-            localStorage.setItem('plfHistory', JSON.stringify(trimmed));
-            return trimmed;
-          });
-        }
-      } catch (error) {
-        setUsdRate('Indisponível');
-        setEurRate('Indisponível');
-      }
-    };
-
-    fetchRates();
-    const interval = setInterval(fetchRates, 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    if (plfHistory.length < 2) return;
-    const first = plfHistory[0].value;
-    const last = plfHistory[plfHistory.length - 1].value;
-    const change = ((last / first) - 1) * 100;
-    setPlfChange(`${change > 0 ? '+' : ''}${change.toFixed(2)}%`);
-  }, [plfHistory]);
-
-  const graphValues = React.useMemo(() => plfHistory.map((point) => point.value), [plfHistory]);
-
-  const graphPath = React.useMemo(() => {
-    if (plfHistory.length < 2) return 'M0,150 L600,150';
-    const width = 600;
-    const height = 150;
-    const max = Math.max(...graphValues);
-    const min = Math.min(...graphValues);
-    const range = max - min || 1;
-
-    return plfHistory
-      .map((value, index) => {
-        const x = (index / (plfHistory.length - 1)) * width;
-        const y = height - (((value.value - min) / range) * height);
-        return `${index === 0 ? 'M' : 'L'}${x},${y}`;
-      })
-      .join(' ');
-  }, [plfHistory, graphValues]);
-
-  const yTicks = React.useMemo(() => {
-    if (!graphValues.length) return ['R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00', 'R$ 0,00'];
-    const max = Math.max(...graphValues);
-    const min = Math.min(...graphValues);
-    const range = max - min || 0.1;
-    return Array.from({ length: 5 }, (_, i) => `R$ ${(max - (range * i) / 4).toFixed(2)}`);
-  }, [graphValues]);
-
-  const timeLabels = React.useMemo(() => {
-    const count = 12;
-    const step = 5 * 60 * 1000;
-    const reference = plfHistory.length
-      ? new Date(plfHistory[plfHistory.length - 1].time)
-      : new Date();
-    reference.setSeconds(0, 0);
-    const remainder = reference.getMinutes() % 5;
-    if (remainder !== 0) {
-      reference.setMinutes(reference.getMinutes() - remainder);
-    }
-    return Array.from({ length: count }, (_, index) => {
-      const timestamp = reference.getTime() - (count - 1 - index) * step;
-      return new Date(timestamp).toLocaleTimeString('pt-BR', {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    });
-  }, [plfHistory]);
-
-  const movers = [
-    { code: 'USD', label: 'Dólar', value: usdRate, change: usdChange || '+0,00%', positive: !usdChange.includes('-') },
-    { code: 'EUR', label: 'Euro', value: eurRate, change: eurChange || '+0,00%', positive: !eurChange.includes('-') },
-    {
-      code: 'VE',
-      label: 'Crédito de Carbono VE',
-      value: usdNumeric ? `R$ ${(usdNumeric * 12).toFixed(2)}` : 'Calculando...',
-      change: usdChange || '+0,00%',
-      positive: !(usdChange || '').includes('-')
-    },
-    ...staticMovers
-  ];
+/**
+ * O gráfico do Índice Palafita: a linha em verde e, embaixo dela, as hastes da palafita — o gráfico é a marca.
+ * Estica para preencher o quadro (a altura acompanha a coluna de dados ao lado); o traço não engrossa com isso.
+ */
+const PalafitaChart: React.FC<{ days: Day[] }> = ({ days }) => {
+  const W = 640, H = 300, top = 8, foot = 2, plot = H - top - foot;
+  const values = days.map((d) => d.plf);
+  const max = values.length ? Math.max(...values) : 0;
+  const min = values.length ? Math.min(...values) : 0;
+  const range = max - min || Math.max(max * 0.001, 0.01);
+  const pts = days.map((d, i) => [(i / Math.max(1, days.length - 1)) * W, top + (1 - (d.plf - min) / range) * plot]);
+  const flat = days.length < 2;
+  const line = flat ? `M0 ${top + plot / 2} H${W}` : pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
 
   return (
-    <div className="space-y-2 md:space-y-2.5">
-      <section className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <Ticker />
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      preserveAspectRatio="none"
+      className="absolute inset-0 block h-full w-full"
+      role="img"
+      aria-label="Gráfico do Índice Palafita nos últimos 30 dias úteis"
+    >
+      <line x1="0" x2={W} y1={top + plot} y2={top + plot} stroke="rgba(255,255,255,.18)" vectorEffect="non-scaling-stroke" />
+      <g fill="#4ADE80">
+        {!flat && pts.map(([x, y], i) => <rect key={i} x={Math.min(W - 4, Math.max(0, x - 2))} y={y} width={4} height={top + plot - y} />)}
+      </g>
+      <path
+        d={line}
+        fill="none"
+        stroke="#4ADE80"
+        strokeWidth={flat ? 2 : 4}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity={flat ? 0.4 : 1}
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+};
+
+const Home: React.FC = () => {
+  const [days, setDays] = useState<Day[]>([]);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    const ctrl = new AbortController();
+    const from = new Date(Date.now() - 50 * 864e5).toISOString().slice(0, 10);
+    fetch(`${RATES_URL}/${from}..?base=BRL&symbols=USD,EUR`, { signal: ctrl.signal })
+      .then((r) => {
+        if (!r.ok) throw new Error(String(r.status));
+        return r.json();
+      })
+      .then((data: { rates: Record<string, { USD: number; EUR: number }> }) => {
+        const series = Object.keys(data.rates)
+          .sort()
+          .map((date) => {
+            const usd = 1 / data.rates[date].USD;
+            const eur = 1 / data.rates[date].EUR;
+            return { date, usd, eur, plf: plfOf(usd, eur) };
+          });
+        setDays(series.slice(-30));
+      })
+      .catch((e) => {
+        if (e.name !== 'AbortError') setFailed(true);
+      });
+    return () => ctrl.abort();
+  }, []);
+
+  const last = days[days.length - 1];
+  const prev = days[days.length - 2];
+  const change = (k: 'usd' | 'eur' | 'plf') => (last && prev ? (last[k] / prev[k] - 1) * 100 : null);
+  const plfChange = change('plf');
+  const usdPct = change('usd');
+  const eurPct = change('eur');
+  const waiting = failed ? 'Indisponível' : 'Carregando…';
+  const movers = [
+    { code: 'USD', label: 'Dólar', value: last ? brl(last.usd) : waiting, change: usdPct !== null ? pct(usdPct) : '—', positive: (usdPct ?? 0) >= 0 },
+    { code: 'EUR', label: 'Euro', value: last ? brl(last.eur) : waiting, change: eurPct !== null ? pct(eurPct) : '—', positive: (eurPct ?? 0) >= 0 },
+    { code: 'VE', label: 'Crédito de Carbono VE', value: last ? brl(last.usd * 12) : waiting, change: usdPct !== null ? pct(usdPct) : '—', positive: (usdPct ?? 0) >= 0 },
+    ...staticMovers,
+  ];
+
+  const today = useMemo(
+    () => new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'America/Manaus' }).format(new Date()),
+    [],
+  );
+
+  return (
+    <main>
+      <Ticker />
+
+      {/* Entrada: díptico — o título na parede verde; à direita, o encontro das águas enorme, sangrando pelas bordas */}
+      <section className="grid overflow-hidden bg-verde text-marinho lg:min-h-[calc(100svh-106px)] lg:grid-cols-2">
+        <div className="flex flex-col justify-center py-16 pl-[max(var(--margem),calc((100vw-1320px)/2))] pr-[var(--margem)] lg:py-20 lg:pr-14">
+          <p className="olho">Manaus, {today}</p>
+          <h1 className="titulo mt-6 text-[clamp(44px,5.2vw,92px)]">
+            <span className="block">Futuro sustentável não é discurso.</span>
+            <span className="block">É classe de ativo.</span>
+          </h1>
+          <p className="mt-8 max-w-[30ch] font-serif text-[clamp(20px,1.6vw,25px)] leading-snug">
+            Mercado, notícias e índices da economia verde, a partir de Manaus.
+          </p>
+          <a href="#destaque" className="olho mt-10 inline-flex items-center gap-3 self-start border-b-2 border-marinho pb-1.5">
+            Comece a visita <span aria-hidden="true">↓</span>
+          </a>
         </div>
+        <figure className="campo-marinho relative aspect-[4/5] bg-marinho sm:aspect-[5/4] lg:aspect-auto">
+          <Encontro
+            largura={800}
+            altura={1000}
+            x={-60}
+            y={140}
+            s={4.4}
+            t={26}
+            P={18}
+            enquadrar="xMidYMax slice"
+            className="absolute inset-0 block h-full w-full"
+            rotulo="O encontro das águas: o Rio Negro e o Solimões se tocam e seguem como o Amazonas"
+          />
+          <figcaption className="absolute left-[var(--margem)] top-10 lg:left-12 lg:top-14">
+            <WallLabel tone="escuro" title="Encontro das Águas" year="2026" lines={['Rio Negro · Solimões · Amazonas']} collection="Acervo BVM12" />
+          </figcaption>
+        </figure>
       </section>
-      <section id="sobre-nos" className="bg-gray-50 scroll-mt-20">
-        <div className="max-w-7xl mx-auto px-4 py-12 space-y-10">
-          <Link
-            to={featuredPost.to}
-            className="relative block rounded-2xl overflow-hidden shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
-          >
-            <img
-              src={featuredPost.image}
-              alt={featuredPost.title}
-              className="w-full h-72 sm:h-96 object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
-            <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-10 text-white space-y-3">
-              <span className="text-xs uppercase tracking-widest font-semibold text-green-300">
-                {featuredPost.tag}
-              </span>
-              <h1 className="text-2xl sm:text-4xl font-bold leading-tight">{featuredPost.title}</h1>
-              <p className="max-w-3xl text-sm sm:text-base text-white/90">{featuredPost.summary}</p>
-              <span className="inline-flex items-center gap-2 text-sm font-semibold">
-                Leia a matéria
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="w-4 h-4"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4.5 12a.75.75 0 0 1 .75-.75h12.19l-3.22-3.22a.75.75 0 1 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H5.25A.75.75 0 0 1 4.5 12Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </span>
+
+      {/* Sala 01 · Em destaque */}
+      <section id="destaque" className="scroll-mt-16 bg-nevoa py-20 md:py-28">
+        <div className="contenedor">
+          <RoomHeader number="01" title="Em destaque" />
+          <div className="mt-12 grid gap-x-14 gap-y-10 lg:grid-cols-12 lg:items-center">
+            <article className="lg:col-span-6">
+              <p className="olho text-ardosia">
+                {featured.section} · <time dateTime={featured.date}>{featured.dateLabel}</time>
+              </p>
+              <h3 className="manchete mt-5 text-[clamp(34px,3.9vw,58px)]">{featured.title}</h3>
+              <p className="leitura mt-6 text-ardosia">{featured.summary}</p>
+              {featured.aside && <p className="leitura mt-4 italic text-ardosia">{featured.aside}</p>}
+              <Sources sources={featured.sources} className="mt-8" />
+            </article>
+            <div className="lg:col-span-6">
+              <NewsArtwork
+                image={featured.image}
+                alt={featured.imageAlt}
+                outline={featured.figure.outline}
+                solid={featured.figure.solid}
+                caption={featured.figure.caption}
+                field={featured.field}
+              />
             </div>
-          </Link>
+          </div>
         </div>
       </section>
 
-      <section className="scroll-mt-20">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="w-full bg-[#162c4e] text-white rounded-2xl px-6 py-8 shadow-lg space-y-8">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-              <div>
-                <p className="text-sm text-white/70">Índice PLF • Palafita</p>
-                <div className="text-3xl md:text-4xl font-bold">
-                  {plfValue ? `R$ ${plfValue.toFixed(2)}` : 'Carregando...'}
-                </div>
-                <p className={`text-sm font-semibold ${plfChange.includes('-') ? 'text-red-400' : 'text-green-400'}`}>
-                  {plfChange || '0,00%'} • 1 dia
+      {/* Sala 02 · O índice */}
+      <section id="indice" className="campo-marinho scroll-mt-16 bg-marinho py-20 text-white md:py-28">
+        <div className="contenedor">
+          <RoomHeader number="02" title="O índice" tone="escuro">
+            <p className="olho text-white/60">{last ? `Referência de ${ddmm(last.date)}` : 'Referência diária'}</p>
+          </RoomHeader>
+          <div className="mt-12 grid gap-x-16 gap-y-12 lg:grid-cols-12">
+            {/* O número herói mede a própria coluna (cqw), não a janela: em tela larga ele não invade o gráfico. */}
+            <div className="[container-type:inline-size] lg:col-span-6 xl:col-span-5">
+              <p className="olho text-verde">Índice PLF · Palafita</p>
+              <p className="titulo-largo mt-5 whitespace-nowrap text-[min(19cqw,132px)] tabular-nums">
+                {last ? (
+                  <>
+                    <span className="contorno" style={{ WebkitTextStrokeColor: '#fff' }}>R$ </span>
+                    {brl(last.plf).replace('R$ ', '')}
+                  </>
+                ) : (
+                  waiting
+                )}
+              </p>
+              {plfChange !== null && (
+                <p className={`mt-4 font-mono text-[15px] ${plfChange < 0 ? 'text-queda' : 'text-verde'}`}>
+                  {plfChange < 0 ? '▼' : '▲'} {pct(plfChange)} no dia
                 </p>
-              </div>
-              <div className="grid grid-cols-3 gap-6 text-sm">
-                {marketStats.map((item) => (
-                  <div key={item.label}>
-                    <p className="text-white/60">{item.label}</p>
-                    <p className="font-semibold">
-                      {item.value}{' '}
-                      {item.change && (
-                        <span className="text-green-400 text-xs font-medium">{item.change}</span>
-                      )}
-                    </p>
+              )}
+              <dl className="mt-10 border-t border-white/15 font-mono text-[14px]">
+                {marketStats.map((s) => (
+                  <div key={s.label} className="flex items-baseline justify-between gap-4 border-b border-white/15 py-3.5">
+                    <dt className="text-white/65">{s.label}</dt>
+                    <dd className="tabular-nums">
+                      {s.value} {s.change && <span className="ml-1 text-verde">▲ {s.change}</span>}
+                    </dd>
                   </div>
                 ))}
-              </div>
-            </div>
-
-            <div className="flex flex-col lg:flex-row gap-6 lg:items-stretch">
-              <div className="flex-1 space-y-6 lg:flex lg:flex-col">
-                <div className="flex gap-3 text-xs uppercase tracking-wide text-white/70">
-                  {['1D', '1M', '3M', '1A', '5A', 'Todos'].map((period) => (
-                    <button
-                      key={period}
-                      className={`px-3 py-1 rounded-full border border-white/10 ${
-                        period === '1D' ? 'bg-white text-primary font-semibold' : 'hover:bg-white/10'
-                      }`}
-                    >
-                      {period}
-                    </button>
+              </dl>
+              <table className="mt-8 w-full font-mono text-[14px]">
+                <caption className="sr-only">Moedas e ativos verdes</caption>
+                <tbody>
+                  {movers.map((m) => (
+                    <tr key={m.code} className="border-t border-white/15 last:border-b">
+                      <td className="w-16 py-3.5 text-verde">{m.code}</td>
+                      <td className="py-3.5 font-sans text-[15px] text-white/80">{m.label}</td>
+                      <td className="py-3.5 text-right tabular-nums">{m.value}</td>
+                      <td className={`w-24 py-3.5 text-right tabular-nums ${m.positive ? 'text-verde' : 'text-queda'}`}>{m.change}</td>
+                    </tr>
                   ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="flex flex-col lg:col-span-6 xl:col-span-7">
+              <figure className="flex flex-1 flex-col">
+                {days.length > 1 && (
+                  <p className="mb-3 text-right font-mono text-[12px] text-white/60">máx. {brl(Math.max(...days.map((d) => d.plf)))}</p>
+                )}
+                <div className="relative h-[260px] lg:h-auto lg:min-h-[320px] lg:flex-1">
+                  <PalafitaChart days={days} />
                 </div>
-
-                <div className="relative h-64 lg:flex-1 bg-gradient-to-b from-emerald-400/40 to-transparent rounded-3xl overflow-hidden">
-                  <div className="absolute inset-y-0 left-0 right-20 px-6">
-                    <svg viewBox="0 0 600 200" preserveAspectRatio="none" className="w-full h-full">
-                      <path
-                        d={graphPath}
-                        fill="none"
-                        stroke="#34d399"
-                        strokeWidth="4"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                    <div className="absolute left-6 right-6 bottom-2 flex justify-between text-xs text-white/70 pointer-events-none">
-                      {timeLabels.map((label, idx) => (
-                        <span key={`${label}-${idx}`}>{label}</span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="absolute inset-y-6 right-3 flex flex-col justify-between text-xs text-white/70 text-right pointer-events-none">
-                    {yTicks.map((tick, idx) => (
-                      <span key={`${tick}-${idx}`}>{tick}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="lg:w-[35%] grid gap-3">
-                {movers.map((item) => (
-                  <div key={item.code} className="flex items-center gap-3 bg-white/5 rounded-2xl px-4 py-3">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-sm font-semibold">
-                      {item.code}
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-white/70">{item.label}</p>
-                      <p className="font-semibold text-white">{item.value}</p>
-                    </div>
-                    <span
-                      className={`text-sm font-semibold ${
-                        item.positive ? 'text-green-400' : 'text-red-400'
-                      }`}
-                    >
-                      {item.change}
-                    </span>
-                  </div>
-                ))}
-              </div>
+                {days.length > 1 && (
+                  <p className="mt-2 flex justify-between font-mono text-[12px] text-white/60">
+                    <span>{ddmm(days[0].date)}</span>
+                    <span>{ddmm(days[days.length - 1].date)}</span>
+                  </p>
+                )}
+                <figcaption className="mt-3 font-mono text-[11.5px] uppercase tracking-[0.06em] text-white/55">
+                  Últimos 30 dias úteis · cotações de referência do Banco Central Europeu (Frankfurter)
+                </figcaption>
+              </figure>
             </div>
           </div>
         </div>
       </section>
-      <section id="metodologias" className="max-w-7xl mx-auto px-4 pt-6 pb-4 scroll-mt-20 space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-primary">Notícias</h2>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              className="h-8 w-8 flex items-center justify-center rounded-full border border-primary/20 text-primary/70 hover:text-primary hover:border-primary transition"
-              onClick={() => {
-                const container = document.getElementById('news-carousel');
-                if (container) container.scrollBy({ left: -320, behavior: 'smooth' });
-              }}
-              aria-label="Ver notícias anteriores"
-            >
-              ‹
-            </button>
-            <button
-              type="button"
-              className="h-8 w-8 flex items-center justify-center rounded-full border border-primary/20 text-primary/70 hover:text-primary hover:border-primary transition"
-              onClick={() => {
-                const container = document.getElementById('news-carousel');
-                if (container) container.scrollBy({ left: 320, behavior: 'smooth' });
-              }}
-              aria-label="Ver próximas notícias"
-            >
-              ›
-            </button>
+
+      {/* Sala 03 · Notícias */}
+      <section id="noticias" className="scroll-mt-16 bg-nevoa py-20 md:py-28">
+        <div className="contenedor">
+          <RoomHeader number="03" title="Notícias">
+            <p className="max-w-[38ch] font-serif text-[18px] leading-snug text-ardosia">
+              O que move a economia verde, em resumos da redação com link para a fonte.
+            </p>
+          </RoomHeader>
+          <div className="mt-14 grid gap-x-10 gap-y-16 md:grid-cols-6">
+            {news.map((item, i) => (
+              <div key={item.id} className={i < 2 ? 'md:col-span-3' : 'md:col-span-2'}>
+                <NewsCard item={item} ratio={i < 2 ? '16 / 9' : '4 / 3'} bandClass={i < 2 ? 'min-h-[25cqw]' : 'md:min-h-[32cqw]'} />
+              </div>
+            ))}
+          </div>
+          <div className="mt-20 border-t border-marinho/25 pt-5">
+            <p className="olho text-ardosia">Do arquivo</p>
+            <ul className="mt-4 divide-y divide-marinho/15">
+              {archive.map((a) => (
+                <li key={a.to}>
+                  <Link to={a.to} className="group flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-4">
+                    <span className="manchete text-[21px] group-hover:underline group-hover:decoration-2 group-hover:underline-offset-4">{a.title}</span>
+                    <span className="olho text-ardosia">{a.dateLabel}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-        <div id="news-carousel" className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
-          {posts.map((post, index) => (
-            <div key={index} className="min-w-[18rem] w-72 flex-shrink-0">
-              <NewsCard post={post} />
-            </div>
+      </section>
+
+      {/* Sala 04 · Para assistir */}
+      <section className="campo-marinho bg-marinho py-20 text-white md:py-28">
+        <div className="contenedor">
+          <RoomHeader number="04" title="Para assistir" tone="escuro">
+            <ScrollArrows target="projecao" label="Filmes e séries" />
+          </RoomHeader>
+          <p className="mt-6 max-w-[46ch] font-serif text-[19px] leading-snug text-white/80">
+            Filmes e séries sobre clima, floresta e o que fazemos com eles.
+          </p>
+        </div>
+        <div id="projecao" className="sem-barra mt-12 flex snap-x snap-mandatory gap-8 overflow-x-auto scroll-px-[var(--margem)] px-[var(--margem)] pb-2">
+          {streamingCollection.map((item) => (
+            <article key={item.id} className="w-[min(82vw,400px)] shrink-0 snap-start">
+              <figure>
+                <div className="aspect-video overflow-hidden bg-white/5">
+                  <img src={item.image} alt={`Arte de divulgação de ${item.title}`} loading="lazy" className="h-full w-full object-cover" />
+                </div>
+                <figcaption className="mt-2 text-right font-mono text-[10.5px] uppercase tracking-[0.08em] text-white/50">
+                  Divulgação {item.platform}
+                </figcaption>
+              </figure>
+              <p className="olho mt-3 text-verde">
+                {item.platform} · {item.type}
+              </p>
+              <h3 className="mt-2 text-[22px] font-bold leading-tight">{item.title}</h3>
+              <p className="mt-2 font-serif text-[16.5px] leading-snug text-white/75">{item.description}</p>
+            </article>
           ))}
+          <div className="w-px shrink-0" aria-hidden="true" />
         </div>
       </section>
 
-      
-
-
-      <section className="bg-[#eeeee] text-white py-6">
-        <div className="max-w-7xl mx-auto px-4 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold">Filmes e Séries</h2>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                className="h-8 w-8 flex items-center justify-center rounded-full border border-white/20 text-white/70 hover:text-white hover:border-white/50 transition"
-                onClick={() => {
-                  const container = document.getElementById('streaming-carousel');
-                  if (container) container.scrollBy({ left: -300, behavior: 'smooth' });
-                }}
-                aria-label="Ver títulos anteriores"
-              >
-                ‹
-              </button>
-              <button
-                type="button"
-                className="h-8 w-8 flex items-center justify-center rounded-full border border-white/20 text-white/70 hover:text-white hover:border-white/50 transition"
-                onClick={() => {
-                  const container = document.getElementById('streaming-carousel');
-                  if (container) container.scrollBy({ left: 300, behavior: 'smooth' });
-                }}
-                aria-label="Ver próximos títulos"
-              >
-                ›
-              </button>
-            </div>
-          </div>
-          <div id="streaming-carousel" className="flex gap-5 overflow-x-auto hide-scrollbar pb-2">
-            {streamingCollection.map((item) => (
-              <article
-                key={item.id}
-                className="bg-[#101a2c] border border-white/5 rounded-3xl shadow-lg overflow-hidden flex flex-col min-w-[18rem] w-72"
-              >
-                <div
-                  className="h-[30rem] bg-cover bg-center relative"
-                  style={{ backgroundImage: `url(${item.image})` }}
-                  role="img"
-                  aria-label={`Poster de ${item.title} em ${item.platform}`}
-                >
-                  <span className="absolute bottom-2 left-2 text-[11px] bg-black/50 text-white/75 px-2 py-1 rounded-full">
-                    {item.platform} · {item.type}
-                  </span>
+      {/* Sala 05 · Para cozinhar */}
+      <section className="bg-verde py-20 text-marinho md:py-28">
+        <div className="contenedor">
+          <RoomHeader number="05" title="Para cozinhar">
+            <p className="max-w-[36ch] font-serif text-[19px] leading-snug">
+              Pratos de cozinhas que vivem da floresta em pé: Amazônia, Bacia do Congo e a milpa mexicana.
+            </p>
+          </RoomHeader>
+          <div className="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+            {recipes.map((r) => (
+              <article key={r.title}>
+                <div className="moldura">
+                  <img src={r.image} alt={`${r.title}, prato da ${r.place}`} loading="lazy" className="aspect-[4/3] w-full object-cover" />
                 </div>
-                <div className="p-4 space-y-2">
-                  <h3 className="text-lg font-semibold">{item.title}</h3>
-                  <p className="text-sm text-white/70">{item.description}</p>
-                  <button className="text-sm text-primary hover:underline">Saiba mais</button>
-                </div>
+                <p className="olho mt-6">{r.place}</p>
+                <h3 className="mt-2 text-[23px] font-bold leading-tight">{r.title}</h3>
+                <p className="mt-2 font-serif text-[17px] leading-snug">{r.description}</p>
               </article>
             ))}
           </div>
+          <p className="mt-12 font-mono text-[11px] uppercase tracking-[0.08em] text-marinho/70">Imagens: ilustrações BVM12</p>
         </div>
       </section>
-
-      <section className="bg-[#f3f4f6] text-gray-900 py-6">
-        <div className="max-w-7xl mx-auto px-4 space-y-4">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h2 className="text-xl font-semibold flex items-center gap-2">
-                Receitas <span className="text-lg">›</span>
-              </h2>
-              <p className="text-sm text-gray-500">Planeje seu banquete ESG com opções equilibradas.</p>
-            </div>
-            <div className="w-full md:w-auto flex flex-col gap-3 sm:flex-row sm:items-center">
-              <div className="flex items-center bg-black/40 rounded-lg px-3 py-2 w-full sm:w-72 border border-white/10">
-                <input
-                  type="text"
-                  placeholder="Encontre uma receita"
-                  className="bg-transparent text-sm flex-1 outline-none placeholder:text-gray-300 text-white"
-                />
-                <span>🔍</span>
-              </div>
-              <div className="flex gap-2 self-end sm:self-auto">
-                <button
-                  type="button"
-                  className="h-8 w-8 flex items-center justify-center rounded-full border border-primary/20 text-primary/70 hover:text-primary hover:border-primary transition"
-                  onClick={() => {
-                    const container = document.getElementById('recipes-carousel');
-                    if (container) container.scrollBy({ left: -320, behavior: 'smooth' });
-                  }}
-                  aria-label="Ver receitas anteriores"
-                >
-                  ‹
-                </button>
-                <button
-                  type="button"
-                  className="h-8 w-8 flex items-center justify-center rounded-full border border-primary/20 text-primary/70 hover:text-primary hover:border-primary transition"
-                  onClick={() => {
-                    const container = document.getElementById('recipes-carousel');
-                    if (container) container.scrollBy({ left: 320, behavior: 'smooth' });
-                  }}
-                  aria-label="Ver próximas receitas"
-                >
-                  ›
-                </button>
-              </div>
-            </div>
-          </div>
-          <div id="recipes-carousel" className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
-            {recipes.map((recipe, index) => (
-              <article
-                key={index}
-                className="min-w-[17rem] w-72 flex-shrink-0 rounded-2xl overflow-hidden bg-black/50 border border-white/5 text-white"
-              >
-                <img src={recipe.image} alt={recipe.title} className="h-40 w-full object-cover" />
-                <div className="p-4 space-y-2">
-                  <h3 className="font-semibold">{recipe.title}</h3>
-                  <div className="text-xs text-gray-300 flex items-center gap-2">
-                    <span>{recipe.duration}</span>
-                    <span>|</span>
-                    <span>{recipe.category}</span>
-                    <span>|</span>
-                    <span>⭐ {recipe.rating}</span>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-    </div>
+    </main>
   );
 };
 
 export default Home;
-
