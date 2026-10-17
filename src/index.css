@@ -58,6 +58,16 @@
   @media (min-width: 768px) { .fileira-obra { width: calc((min(100cqw - 2 * var(--margem), 1320px) - 2rem) / 2); } }
   @media (min-width: 1024px) { .fileira-obra { width: calc((min(100cqw - 2 * var(--margem), 1320px) - 4rem) / 3); } }
 
+  /*
+   * Ficha: o texto de um cartão que fica lado a lado com outros (notícia, filme, receita). O tamanho segue a largura do
+   * cartão (cqw), então as quebras de linha são as mesmas em qualquer tela; com textos do mesmo comprimento, os títulos
+   * de uma fileira ocupam o mesmo número de linhas, e os resumos também. A serifa fica num tamanho óptico fixo pelo
+   * mesmo motivo (com o automático, a largura das letras mudaria com o tamanho).
+   */
+  .ficha { container-type: inline-size; }
+  .ficha-serifa { font-optical-sizing: none; font-variation-settings: 'opsz' 18; }
+  .ficha-manchete { font-optical-sizing: none; font-variation-settings: 'opsz' 30; }
+
   /* O número é a imagem: cabe no quadro pelo container (cqw) */
   .obra-numero { container-type: inline-size; }
   .contorno { color: transparent; -webkit-text-stroke-width: 0.03em; }

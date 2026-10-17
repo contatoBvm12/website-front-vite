@@ -12,24 +12,26 @@ import { archive, featured, news } from '../data/news';
  */
 
 // Títulos conferidos em 17/10/2026 nas páginas oficiais brasileiras (Disney+, Apple TV); imagens de divulgação das
-// plataformas, com crédito. Os nomes são os da arte oficial no Brasil.
+// plataformas, com crédito. Os nomes são os da arte oficial no Brasil. Na fileira, todo título cabe numa linha e toda
+// descrição ocupa três: mantenha as descrições com 121–128 caracteres.
 const streamingCollection = [
-  { id: 'territorio', platform: 'Disney+', type: 'Filme', title: 'O Território', description: 'O povo Uru-eu-wau-wau enfrenta invasores e desmatamento numa área protegida da Amazônia; boa parte das imagens foi filmada pelos próprios indígenas.', image: '/fotos/assistir-territorio.jpg' },
-  { id: 'extrapolations', platform: 'Apple TV+', type: 'Série', title: 'Extrapolations: Um Futuro Inquietante', description: 'Oito histórias interligadas, ao longo de 33 anos, mostram como a mudança do clima vai mexer com família, trabalho e fé.', image: '/fotos/assistir-extrapolations.jpg' },
-  { id: 'attenborough', platform: 'Netflix', type: 'Filme', title: 'David Attenborough e Nosso Planeta', description: 'O naturalista revê a própria carreira, o que viu a natureza perder ao longo de uma vida e como ela pode se recuperar.', image: '/fotos/assistir-attenborough.jpg' },
-  { id: 'seremos-historia', platform: 'Disney+', type: 'Filme', title: 'Seremos História?', description: 'Leonardo DiCaprio vai à linha de frente da crise do clima e conversa com quem está no centro da causa.', image: '/fotos/assistir-before-the-flood.jpg' },
-  { id: 'ano-terra', platform: 'Apple TV+', type: 'Filme', title: 'O Ano em que a Terra Mudou', description: 'Com narração de David Attenborough, mostra como a natureza reagiu quando o mundo parou na pandemia.', image: '/fotos/assistir-ano-terra.jpg' },
-  { id: 'solo-fertil', platform: 'Prime Video', type: 'Filme', title: 'Solo Fértil', description: 'Cientistas, agricultores e ativistas defendem a recuperação do solo como ferramenta contra a mudança do clima.', image: '/fotos/assistir-solo-fertil.jpg' },
-  { id: 'artico', platform: 'Disney+', type: 'Filme', title: 'Ártico Ameaçado', description: 'Com a mudança do clima no Ártico, os povos indígenas da região lutam pela terra e pelo mar de que dependem.', image: '/fotos/assistir-last-ice.jpg' },
+  { id: 'territorio', platform: 'Disney+', type: 'Filme', title: 'O Território', description: 'O povo Uru-eu-wau-wau enfrenta invasores e desmatamento na Amazônia; boa parte das imagens foi filmada pelos próprios indígenas.', image: '/fotos/assistir-territorio.jpg' },
+  { id: 'extrapolations', platform: 'Apple TV+', type: 'Série', title: 'Extrapolations: Um Futuro Inquietante', description: 'Oito histórias interligadas, ao longo de 33 anos, mostram como a mudança do clima vai mexer com a família, o trabalho e a fé.', image: '/fotos/assistir-extrapolations.jpg' },
+  { id: 'attenborough', platform: 'Netflix', type: 'Filme', title: 'David Attenborough e Nosso Planeta', description: 'O naturalista revê a própria carreira, o que viu a natureza perder ao longo de uma vida e como ela ainda pode se recuperar.', image: '/fotos/assistir-attenborough.jpg' },
+  { id: 'seremos-historia', platform: 'Disney+', type: 'Filme', title: 'Seremos História?', description: 'Leonardo DiCaprio percorre o mundo na linha de frente da crise do clima e conversa com cientistas e líderes no centro da causa.', image: '/fotos/assistir-before-the-flood.jpg' },
+  { id: 'ano-terra', platform: 'Apple TV+', type: 'Filme', title: 'O Ano em que a Terra Mudou', description: 'Com narração de David Attenborough, o filme mostra como a natureza reagiu quando o mundo parou durante a pandemia de 2020.', image: '/fotos/assistir-ano-terra.jpg' },
+  { id: 'solo-fertil', platform: 'Prime Video', type: 'Filme', title: 'Solo Fértil', description: 'Cientistas, agricultores e ativistas defendem a recuperação do solo como uma ferramenta poderosa contra a mudança do clima.', image: '/fotos/assistir-solo-fertil.jpg' },
+  { id: 'artico', platform: 'Disney+', type: 'Filme', title: 'Ártico Ameaçado', description: 'Com o gelo do Ártico derretendo, os povos indígenas da região lutam pela terra e pelo mar de que sempre dependeram para viver.', image: '/fotos/assistir-last-ice.jpg' },
   { id: 'curta-essa', platform: 'Netflix', type: 'Série', title: 'Curta Essa com Zac Efron', description: 'Zac Efron e o especialista em bem-estar Darin Olien rodam o mundo atrás de jeitos mais saudáveis e sustentáveis de viver.', image: '/fotos/assistir-zac-efron.jpg' },
 ];
 
-// Cozinhas que vivem da floresta em pé. Fotos geradas para a BVM12 no campo de cor da marca.
+// Cozinhas que vivem da floresta em pé. Fotos geradas para a BVM12 no campo de cor da marca. Descrições com 86–93
+// caracteres: três linhas no desktop (quatro lado a lado) e duas no tablet (duas lado a lado).
 const recipes = [
-  { title: 'Tacacá', place: 'Amazônia brasileira', description: 'Caldo de tucupi com goma de tapioca, jambu e camarão seco, servido quente na cuia.', image: '/fotos/receita-tacaca.jpg' },
-  { title: 'Juane', place: 'Amazônia peruana', description: 'Arroz com cúrcuma, frango, ovo e azeitona, cozido em folha de bijao; o prato da festa de San Juan.', image: '/fotos/receita-juane.jpg' },
-  { title: 'Liboké de peixe', place: 'Bacia do Congo', description: 'Peixe de rio com tomate, cebola e pimenta, cozido no vapor dentro de folhas, com chikwangue de mandioca.', image: '/fotos/receita-liboke.jpg' },
-  { title: 'Sopa de milpa', place: 'México', description: 'Milho, abóbora, flor de abóbora e feijão: os frutos da milpa, o roçado consorciado que alimenta a Mesoamérica há milênios.', image: '/fotos/receita-milpa.jpg' },
+  { title: 'Tacacá', place: 'Amazônia brasileira', description: 'Caldo de tucupi com goma de tapioca, jambu e camarão seco, servido bem quente na cuia.', image: '/fotos/receita-tacaca.jpg' },
+  { title: 'Juane', place: 'Amazônia peruana', description: 'Arroz com cúrcuma, frango, ovo e azeitona, em folha de bijao; o prato da festa de San Juan.', image: '/fotos/receita-juane.jpg' },
+  { title: 'Liboké de peixe', place: 'Bacia do Congo', description: 'Peixe de rio com tomate e pimenta, cozido em folhas, com chikwangue, o pão de mandioca.', image: '/fotos/receita-liboke.jpg' },
+  { title: 'Sopa de milpa', place: 'México', description: 'Milho, abóbora e feijão, os frutos da milpa, o roçado que alimenta a Mesoamérica há milênios.', image: '/fotos/receita-milpa.jpg' },
 ];
 
 // Valores fixos, os mesmos do site anterior.
@@ -187,7 +189,7 @@ const Home: React.FC = () => {
       <section id="destaque" className="bg-nevoa py-[var(--sala-y)]">
         <div className="contenedor">
           <RoomHeader number="01" title="Em destaque" />
-          <div className="mt-[var(--sala-vao)] grid gap-x-14 gap-y-10 lg:grid-cols-12 lg:items-start">
+          <div className="mt-[var(--sala-vao)] grid gap-x-14 gap-y-10 lg:grid-cols-12">
             <article className="lg:col-span-6">
               <p className="olho text-ardosia">
                 {featured.section} · <time dateTime={featured.date}>{featured.dateLabel}</time>
@@ -205,7 +207,7 @@ const Home: React.FC = () => {
                 solid={featured.figure.solid}
                 caption={featured.figure.caption}
                 field={featured.field}
-                imageClass="notebook:max-h-[42svh]"
+                stretch
               />
             </div>
           </div>
@@ -269,7 +271,7 @@ const Home: React.FC = () => {
                 </p>
               )}
               <figcaption className="mt-3 font-mono text-[11.5px] uppercase tracking-[0.06em] text-white/55">
-                Últimos 30 dias úteis · cotações de referência do Banco Central Europeu (Frankfurter)
+                Últimos 30 dias úteis · referência do BCE (Frankfurter)
               </figcaption>
             </figure>
             {/* As moedas e ativos verdes, numa faixa: um quadro por ativo, lado a lado no desktop. */}
@@ -301,8 +303,13 @@ const Home: React.FC = () => {
           </RoomHeader>
           <div className="mt-[var(--sala-vao)] grid gap-x-10 gap-y-16 md:grid-cols-6">
             {news.map((item, i) => (
-              <div key={item.id} className={i < 2 ? 'md:col-span-3' : 'md:col-span-2'}>
-                <NewsCard item={item} ratio={i < 2 ? '16 / 9' : '4 / 3'} bandClass={i < 2 ? 'min-h-[25cqw]' : 'md:min-h-[32cqw]'} />
+              <div key={item.id} className={i < 2 ? 'md:col-span-3' : 'md:col-span-3 lg:col-span-2'}>
+                <NewsCard
+                  item={item}
+                  size={i < 2 ? 'grande' : 'pequena'}
+                  ratio={i < 2 ? '16 / 9' : '4 / 3'}
+                  bandClass={i < 2 ? 'min-h-[25cqw]' : 'md:min-h-[32cqw]'}
+                />
               </div>
             ))}
           </div>
@@ -334,7 +341,7 @@ const Home: React.FC = () => {
         </div>
         <div id="projecao" className="fileira-trilho sem-barra mt-[var(--sala-vao)] flex snap-x snap-mandatory gap-8 overflow-x-auto pb-2">
           {streamingCollection.map((item) => (
-            <article key={item.id} className="fileira-obra shrink-0 snap-start">
+            <article key={item.id} className="fileira-obra ficha shrink-0 snap-start">
               <figure>
                 <div className="aspect-video overflow-hidden bg-white/5">
                   <img src={item.image} alt={`Arte de divulgação de ${item.title}`} loading="lazy" className="h-full w-full object-cover" />
@@ -346,8 +353,8 @@ const Home: React.FC = () => {
               <p className="olho mt-3 text-verde">
                 {item.platform} · {item.type}
               </p>
-              <h3 className="mt-2 text-[22px] font-bold leading-tight">{item.title}</h3>
-              <p className="mt-2 font-serif text-[16.5px] leading-snug text-white/75">{item.description}</p>
+              <h3 className="mt-2 whitespace-nowrap text-[5.2cqw] font-bold leading-tight">{item.title}</h3>
+              <p className="ficha-serifa mt-2 font-serif text-[4.8cqw] leading-snug text-white/75">{item.description}</p>
             </article>
           ))}
         </div>
@@ -361,15 +368,15 @@ const Home: React.FC = () => {
               Pratos de cozinhas que vivem da floresta em pé: Amazônia, Bacia do Congo e a milpa mexicana.
             </p>
           </RoomHeader>
-          <div className="mt-[var(--sala-vao)] grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-[var(--sala-vao)] grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-4">
             {recipes.map((r) => (
-              <article key={r.title}>
+              <article key={r.title} className="ficha">
                 <div className="moldura">
                   <img src={r.image} alt={`${r.title}, prato da ${r.place}`} loading="lazy" className="aspect-[4/3] w-full object-cover" />
                 </div>
                 <p className="olho mt-6">{r.place}</p>
-                <h3 className="mt-2 text-[23px] font-bold leading-tight">{r.title}</h3>
-                <p className="mt-2 font-serif text-[17px] leading-snug">{r.description}</p>
+                <h3 className="mt-2 whitespace-nowrap text-[23px] font-bold leading-tight lg:text-[7.6cqw]">{r.title}</h3>
+                <p className="ficha-serifa mt-2 font-serif text-[17px] leading-snug md:text-[4.6cqw] lg:text-[6.4cqw]">{r.description}</p>
               </article>
             ))}
           </div>

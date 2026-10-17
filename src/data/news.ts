@@ -2,6 +2,12 @@
  * Notícias da home, reunidas em 17/10/2026. Os resumos são da BVM12; os fatos e números vêm das matérias citadas em
  * `sources` (link para o original). As imagens são fotoilustrações geradas para a BVM12 (deliverables/bvm12-site),
  * objetos no campo de cor — nunca a simulação de uma foto do fato. Não há CMS: para trocar, edite esta lista.
+ *
+ * Numa fileira da home, as manchetes ocupam o mesmo número de linhas, e os resumos também (o tamanho do texto segue
+ * a largura do cartão, então as quebras valem para qualquer tela). Ao trocar um texto, mantenha o comprimento perto
+ * do dos vizinhos — hoje: manchetes de 46–60 caracteres (2 linhas), resumos de 207–213 na fileira de dois (3 linhas)
+ * e de 220–232 na de três (5 linhas), legendas da faixa de até 31 na fileira de três — e confira na tela.
+ * `\u00a0` (espaço que não quebra) prende a moeda ao número e o número à grandeza: "€\u00a010\u00a0trilhões".
  */
 
 export interface NewsSource {
@@ -33,10 +39,10 @@ export const featured: NewsItem = {
   dateLabel: '16 out 2026',
   title: 'Desmatamento na Amazônia cai 41,8% e chega ao menor nível desde 1988',
   summary:
-    'Entre agosto de 2025 e julho de 2026, a área desmatada na Amazônia caiu de 5.731 km² para 3.335 km², segundo o monitoramento do Inpe divulgado pelo governo federal. No Cerrado, a queda foi de 23,8%, para 5.516,69 km², a menor área desde 2001.',
+    'Entre agosto de 2025 e julho de 2026, a área desmatada na Amazônia caiu de 5.731\u00a0km² para 3.335\u00a0km², segundo o monitoramento do Inpe divulgado pelo governo federal. No Cerrado, a queda foi de 23,8%, para 5.516,69\u00a0km², a menor área desde 2001.',
   aside:
     'No mesmo dia, Manaus amanheceu com o pior ar entre as capitais do país, coberta pela fumaça das queimadas no interior do Amazonas.',
-  figure: { outline: '−41', solid: ',8%', caption: 'Desmatamento na Amazônia, ago/2025 a jul/2026, sobre os 12 meses anteriores' },
+  figure: { outline: '−41', solid: ',8%', caption: 'Desmatamento na Amazônia, ago/2025 a jul/2026, sobre um ano antes' },
   image: '/fotos/noticia-desmatamento.jpg',
   imageAlt: 'Fatia de tronco de árvore com uma muda brotando do centro, sobre fundo verde',
   field: 'marinho',
@@ -54,9 +60,9 @@ export const news: NewsItem[] = [
     section: 'Manaus',
     date: '2026-10-16',
     dateLabel: '16 out 2026',
-    title: 'Fumaça das queimadas deixa Manaus com o pior ar entre as capitais',
+    title: 'Fumaça das queimadas dá a Manaus o pior ar entre as capitais',
     summary:
-      'O índice da IQAir chegou a 167, nível insalubre, na manhã de sexta (16), e as aulas presenciais da rede municipal foram suspensas. Depois do pico de 494 focos em 10 de outubro, o Amazonas registrou 188 nesta sexta, segundo o Inpe.',
+      'O índice da IQAir chegou a 167, nível insalubre, na sexta (16), e as aulas presenciais da rede municipal foram suspensas. Depois do pico de 494\u00a0focos em 10 de outubro, o Amazonas teve 188 na sexta, segundo o Inpe.',
     figure: { solid: '167', caption: 'Índice de qualidade do ar (IQAir) em Manaus: insalubre' },
     image: '/fotos/noticia-manaus-ar.jpg',
     imageAlt: 'Máscara respiratória branca coberta de cinza, sobre fundo marinho',
@@ -73,10 +79,10 @@ export const news: NewsItem[] = [
     section: 'Finanças climáticas',
     date: '2026-10-16',
     dateLabel: '16 out 2026',
-    title: 'Fundo de florestas tropicais chega a US$ 7,3 bilhões e corre contra o prazo',
+    title: 'Com US$\u00a07,3\u00a0bilhões, fundo de florestas corre contra o prazo',
     summary:
-      'Com £ 400 milhões do Reino Unido, o TFFF se aproxima dos US$ 10 bilhões que precisa reunir até 31 de dezembro para começar a operar. Na quinta (15), investidores com € 10 trilhões em ativos assinaram uma declaração de apoio, que não inclui compromisso de aporte.',
-    figure: { outline: 'US$ ', solid: '7,3 bi', caption: 'Em compromissos; a meta é US$ 10 bi até 31 de dezembro' },
+      'Com £\u00a0400\u00a0milhões britânicos, o TFFF se aproxima dos US$\u00a010\u00a0bilhões que precisa até 31 de dezembro para operar. Na quinta (15), investidores com €\u00a010\u00a0trilhões em ativos declararam apoio, sem prometer aporte.',
+    figure: { outline: 'US$ ', solid: '7,3 bi', caption: 'Em compromissos; a meta é US$\u00a010\u00a0bi até 31 de dezembro' },
     image: '/fotos/noticia-tfff.jpg',
     imageAlt: 'Ouriço de castanha-do-pará aberto, com as castanhas dentro, sobre fundo verde',
     field: 'marinho',
@@ -90,10 +96,10 @@ export const news: NewsItem[] = [
     section: 'Mercado',
     date: '2026-10-07',
     dateLabel: '7 out 2026',
-    title: 'Leilão do Eco Invest atrai quase R$ 50 bilhões para a transformação ecológica',
+    title: 'Leilão do Eco Invest atrai quase R$\u00a050\u00a0bilhões',
     summary:
-      'Bradesco, Itaú, Santander e HSBC vão estruturar fundos e operações em seis cadeias, de fertilizantes verdes a biometano. A demanda dos bancos somou R$ 181,3 bilhões, e cada R$ 1 do Tesouro deve mobilizar R$ 3,8 em recursos privados.',
-    figure: { outline: 'R$ ', solid: '49,95 bi', caption: 'Em propostas homologadas no 5º leilão' },
+      'Bradesco, Itaú, Santander e HSBC vão estruturar fundos e operações em seis cadeias, de fertilizantes verdes a biometano. A demanda dos bancos somou R$\u00a0181,3\u00a0bilhões, e cada R$\u00a01 do Tesouro deve mobilizar R$\u00a03,8 em recursos privados.',
+    figure: { outline: 'R$ ', solid: '49,95 bi', caption: 'Em propostas no 5º leilão' },
     image: '/fotos/noticia-eco-invest.jpg',
     imageAlt: 'Frasco de laboratório com líquido verde e uma muda saindo do gargalo, sobre fundo marinho',
     field: 'verde',
@@ -111,14 +117,14 @@ export const news: NewsItem[] = [
     dateLabel: '15 out 2026',
     title: 'Na fronteira europeia, a tonelada de carbono já tem preço',
     summary:
-      'O CBAM, em fase definitiva desde janeiro, cobra pelas emissões embutidas no aço e no alumínio que entram na União Europeia; as compras de certificados começam em fevereiro de 2027. O Brasil ainda regulamenta o próprio mercado, criado por lei em 2024, e a diferença deve pesar a partir de 2030.',
-    figure: { outline: '€ ', solid: '82,32', caption: 'Por tonelada de CO₂e, referência do 3º trimestre de 2026' },
+      'O CBAM, em fase definitiva desde janeiro, cobra pelas emissões embutidas no aço e no alumínio que entram na União Europeia; os certificados são comprados a partir de fevereiro de 2027. O Brasil ainda regulamenta o próprio mercado.',
+    figure: { outline: '€ ', solid: '82,32', caption: 'Por tCO₂e, 3º trimestre de 2026' },
     image: '/fotos/noticia-cbam.jpg',
     imageAlt: 'Balança antiga com um lingote de aço de um lado e carvão do outro, sobre fundo verde',
     field: 'marinho',
     sources: [
       {
-        name: 'CNN Brasil, análise de Pedro Côrtes',
+        name: 'CNN Brasil',
         url: 'https://www.cnnbrasil.com.br/blogs/pedro-cortes/economia/money/macroeconomia/analise-mercado-de-carbono-expoe-desafio-brasileiro/',
       },
     ],
@@ -128,10 +134,10 @@ export const news: NewsItem[] = [
     section: 'Clima',
     date: '2026-10-15',
     dateLabel: '15 out 2026',
-    title: 'COP31 começa em 9 de novembro, em Antalya, com a liderança dividida',
+    title: 'COP31 abre em 9 de novembro com a liderança dividida',
     summary:
-      'A Turquia preside a conferência e a Austrália conduz as negociações; a cúpula de líderes está marcada para 11 e 12 de novembro. O Pavilhão do Brasil terá 114 eventos, escolhidos entre 780 propostas.',
-    figure: { solid: '114', caption: 'Eventos no Pavilhão do Brasil, de 780 propostas' },
+      'Em Antalya, a Turquia preside a conferência e a Austrália conduz as negociações; a cúpula de líderes está marcada para 11 e 12 de novembro. O Pavilhão do Brasil terá 114\u00a0eventos, escolhidos entre as 780 propostas inscritas.',
+    figure: { solid: '114', caption: 'Eventos no Pavilhão do Brasil' },
     image: '/fotos/noticia-cop31.jpg',
     imageAlt: 'Crachá em branco, fones de tradução simultânea e um ramo de oliveira, sobre fundo marinho',
     field: 'verde',

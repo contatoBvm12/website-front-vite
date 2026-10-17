@@ -106,17 +106,26 @@ export const NewsArtwork: React.FC<{
   credit?: string;
   /** Altura mínima da faixa (ex.: 'min-h-[31cqw]'): numa fileira, as manchetes começam na mesma linha. */
   bandClass?: string;
-  /** Classes do quadro da imagem (ex.: um teto de altura em tela baixa; a foto recorta pelo centro). */
-  imageClass?: string;
+  /** Tamanho da legenda da faixa em cqw: o mesmo numa fileira, para as legendas quebrarem igual em qualquer tela. */
+  captionSize?: number;
+  /**
+   * No desktop a obra acompanha a altura da coluna ao lado (o texto da matéria): a imagem estica e recorta pelo centro,
+   * e obra e texto terminam na mesma linha. No celular vale a proporção.
+   */
+  stretch?: boolean;
   className?: string;
-}> = ({ image, alt, outline = '', solid, caption, field = 'marinho', ratio = '4 / 3', credit = 'Ilustração BVM12', bandClass = '', imageClass = '', className = '' }) => {
+}> = ({ image, alt, outline = '', solid, caption, field = 'marinho', ratio = '4 / 3', credit = 'Ilustração BVM12', bandClass = '', captionSize = 1.9, stretch = false, className = '' }) => {
   const chars = (outline + solid).length;
   const size = Math.min(15, 62 / (0.7 * chars));
   const strong = field === 'marinho' ? '#4ADE80' : '#142B4D';
   return (
-    <figure className={`obra-numero ${className}`}>
-      <div className={`w-full overflow-hidden bg-marinho ${imageClass}`} style={{ aspectRatio: ratio }}>
-        <img src={image} alt={alt} loading="lazy" className="h-full w-full object-cover" />
+    <figure className={`obra-numero ${stretch ? 'lg:flex lg:h-full lg:flex-col' : ''} ${className}`}>
+      <div
+        className={`relative w-full overflow-hidden bg-marinho ${stretch ? 'lg:!aspect-auto lg:min-h-[200px] lg:flex-1' : ''}`}
+        style={{ aspectRatio: ratio }}
+      >
+        {/* Absoluta: a foto não entra na conta da altura, quem manda é o quadro (proporção, ou a coluna ao lado). */}
+        <img src={image} alt={alt} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
       </div>
       <div className={`flex flex-col justify-between gap-[1.6cqw] px-[4.5cqw] pb-[4cqw] pt-[3.4cqw] ${bandClass} ${field === 'marinho' ? 'bg-marinho' : 'bg-verde'}`}>
         <p className="titulo-largo whitespace-nowrap" style={{ fontSize: `${size}cqw`, color: strong }} aria-hidden="true">
@@ -129,7 +138,7 @@ export const NewsArtwork: React.FC<{
         </p>
         <p
           className={`font-mono uppercase tracking-[0.08em] ${field === 'marinho' ? 'text-white/70' : 'text-marinho/80'}`}
-          style={{ fontSize: 'max(10.5px, 1.9cqw)' }}
+          style={{ fontSize: `max(9.5px, ${captionSize}cqw)` }}
         >
           {caption}
         </p>
