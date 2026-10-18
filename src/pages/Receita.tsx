@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { NumeroHeroi, Proxima } from '../components/Sala';
 import { receitaPorId, receitas } from '../data/receitas';
@@ -6,8 +6,8 @@ import NotFound from './NotFound';
 
 /*
  * A receita. Abre em díptico (o nome no verde; o prato emoldurado, pendurado na parede marinho), segue com a ficha em
- * números grandes, os ingredientes como lista de conferir (marca o que já separou) ao lado do preparo em passos
- * numerados em contorno e cheio, a história do prato e, na parede marinho, por que ele é comida da floresta em pé.
+ * números grandes, os ingredientes como lista de catálogo ao lado do preparo em passos numerados em contorno e cheio,
+ * a história do prato e, na parede marinho, por que ele é comida da floresta em pé.
  */
 
 const doisDigitos = (n: number) => String(n).padStart(2, '0');
@@ -15,7 +15,6 @@ const doisDigitos = (n: number) => String(n).padStart(2, '0');
 const Receita: React.FC = () => {
   const { id } = useParams();
   const r = receitaPorId(id);
-  const [feitos, setFeitos] = useState<Record<string, boolean>>({});
   if (!r) return <NotFound />;
   const proxima = receitas[(receitas.indexOf(r) + 1) % receitas.length];
   const totalIngredientes = r.ingredientes.reduce((n, g) => n + g.itens.length, 0);
@@ -61,7 +60,7 @@ const Receita: React.FC = () => {
         )}
 
         <section className="contenedor grid gap-x-14 gap-y-14 py-[var(--sala-y)] lg:grid-cols-12">
-          {/* Ingredientes: a lista de conferir fica parada ao lado do preparo no desktop. */}
+          {/* Ingredientes: a lista fica parada ao lado do preparo no desktop. */}
           <aside className="lg:col-span-4">
             <div className="lg:sticky lg:top-[calc(var(--topo)+2rem)]">
               <h2 className="titulo text-[clamp(28px,2.6vw,38px)]">Ingredientes</h2>
@@ -69,22 +68,11 @@ const Receita: React.FC = () => {
                 <div key={g.grupo ?? gi} className="mt-6">
                   {g.grupo && <p className="olho text-ardosia">{g.grupo}</p>}
                   <ul className="mt-3 divide-y divide-marinho/15 border-y border-marinho/15">
-                    {g.itens.map((item) => {
-                      const chave = `${gi}:${item}`;
-                      return (
-                        <li key={chave}>
-                          <label className="flex cursor-pointer items-start gap-3 py-2.5 text-[16px] leading-snug">
-                            <input
-                              type="checkbox"
-                              checked={!!feitos[chave]}
-                              onChange={() => setFeitos((f) => ({ ...f, [chave]: !f[chave] }))}
-                              className="mt-[3px] h-4 w-4 shrink-0 accent-marinho"
-                            />
-                            <span className={feitos[chave] ? 'text-ardosia/60 line-through' : ''}>{item}</span>
-                          </label>
-                        </li>
-                      );
-                    })}
+                    {g.itens.map((item) => (
+                      <li key={item} className="py-2.5 text-[16px] leading-snug">
+                        {item}
+                      </li>
+                    ))}
                   </ul>
                 </div>
               ))}
