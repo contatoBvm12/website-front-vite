@@ -94,3 +94,23 @@
   html { scroll-behavior: auto; }
   .correr { animation: none; }
 }
+
+/*
+ * Corpo das matérias das salas (Corpo em components/Sala.tsx): coluna de leitura de jornal, capitular em Archivo, a
+ * citação grande com o fio verde, e a faixa de números que sai da coluna.
+ */
+.corpo { font-family: 'Newsreader', Georgia, serif; font-size: clamp(18px, 1.3vw, 20.5px); line-height: 1.65; color: #334155; }
+.corpo > * { max-width: 40rem; margin-inline: auto; }
+.corpo > * + * { margin-top: 1.1em; }
+.corpo h2 { font-family: 'Archivo', Arial, sans-serif; font-weight: 800; font-stretch: 112%; letter-spacing: -0.02em; font-size: 1.45em; line-height: 1.12; margin-top: 2.1em; color: #142B4D; }
+.corpo ul { list-style: none; padding: 0; }
+.corpo li { position: relative; padding-left: 1.3em; }
+.corpo li + li { margin-top: 0.55em; }
+.corpo li::before { content: ''; position: absolute; left: 0; top: 0.62em; width: 0.4em; height: 0.4em; background: #142B4D; }
+.capitular::first-letter { float: left; font-family: 'Archivo', Arial, sans-serif; font-weight: 800; font-stretch: 112%; font-size: 4.1em; line-height: 0.8; margin: 0.08em 0.1em 0 0; color: #142B4D; }
+.corpo blockquote { margin-top: 2em; margin-bottom: 2em; border-left: 6px solid #4ADE80; padding-left: 1.2em; }
+.corpo blockquote p { font-family: 'Archivo', Arial, sans-serif; font-weight: 700; font-stretch: 106%; letter-spacing: -0.02em; font-size: 1.5em; line-height: 1.2; color: #142B4D; }
+.corpo blockquote footer { margin-top: 0.8em; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #334155; }
+.corpo .numeros { max-width: 64rem; margin-top: 2.4em; margin-bottom: 2.4em; display: grid; gap: 1.5rem 2.5rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); border-top: 1px solid rgba(20, 43, 77, 0.25); padding-top: 1.4rem; }
+.corpo .numeros dt { font-size: clamp(36px, 4.4vw, 64px); line-height: 1; color: #142B4D; }
+.corpo .numeros dd { margin-top: 0.6rem; font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.5; letter-spacing: 0.06em; text-transform: uppercase; color: #334155; }

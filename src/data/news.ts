@@ -5,7 +5,7 @@
  *
  * Numa fileira da home, as manchetes ocupam o mesmo número de linhas, e os resumos também (o tamanho do texto segue
  * a largura do cartão, então as quebras valem para qualquer tela). Ao trocar um texto, mantenha o comprimento perto
- * do dos vizinhos — hoje: manchetes de 46–60 caracteres (2 linhas), resumos de 207–213 na fileira de dois (3 linhas)
+ * do dos vizinhos — hoje: manchetes de 46–60 caracteres (2 linhas), resumos de 205–213 na fileira de dois (3 linhas)
  * e de 220–232 na de três (5 linhas), legendas da faixa de até 31 na fileira de três — e confira na tela.
  * `\u00a0` (espaço que não quebra) prende a moeda ao número e o número à grandeza: "€\u00a010\u00a0trilhões".
  */
@@ -14,6 +14,11 @@ export interface NewsSource {
   name: string;
   url: string;
 }
+
+import { materias, type Bloco } from './materias';
+
+/** Um bloco do corpo da matéria: parágrafo, intertítulo, citação literal da fonte, lista ou faixa de números. */
+export type { Bloco };
 
 export interface NewsItem {
   id: string;
@@ -30,9 +35,16 @@ export interface NewsItem {
   /** Cor da faixa do número: a oposta ao fundo da imagem. */
   field: 'marinho' | 'verde';
   sources: NewsSource[];
+  /** A matéria completa (/noticias/:id): linha fina, tempo de leitura e corpo. */
+  dek?: string;
+  minutos?: number;
+  corpo?: Bloco[];
 }
 
-export const featured: NewsItem = {
+/** Junta ao cartão a matéria completa (materias.ts). */
+const comMateria = (n: NewsItem): NewsItem => ({ ...n, ...materias[n.id] });
+
+export const featured: NewsItem = comMateria({
   id: 'desmatamento-inpe-2026',
   section: 'Floresta',
   date: '2026-10-16',
@@ -52,9 +64,9 @@ export const featured: NewsItem = {
       url: 'https://agenciabrasil.ebc.com.br/meio-ambiente/noticia/2026-10/desmatamento-caiu-418-na-amazonia-e-238-no-cerrado-em-um-ano',
     },
   ],
-};
+});
 
-export const news: NewsItem[] = [
+const cartoes: NewsItem[] = [
   {
     id: 'manaus-ar-queimadas',
     section: 'Manaus',
@@ -62,7 +74,7 @@ export const news: NewsItem[] = [
     dateLabel: '16 out 2026',
     title: 'Fumaça das queimadas dá a Manaus o pior ar entre as capitais',
     summary:
-      'O índice da IQAir chegou a 167, nível insalubre, na sexta (16), e as aulas presenciais da rede municipal foram suspensas. Depois do pico de 494\u00a0focos em 10 de outubro, o Amazonas teve 188 na sexta, segundo o Inpe.',
+      'O índice da IQAir chegou a 167, nível insalubre, na sexta (16), e a rede municipal suspendeu as aulas presenciais. O Ibama informou ter extinguido 303\u00a0focos de incêndio no Amazonas desde o início das operações.',
     figure: { solid: '167', caption: 'Índice de qualidade do ar (IQAir) em Manaus: insalubre' },
     image: '/fotos/noticia-manaus-ar.jpg',
     imageAlt: 'Máscara respiratória branca coberta de cinza, sobre fundo marinho',
@@ -151,8 +163,14 @@ export const news: NewsItem[] = [
   },
 ];
 
+export const news: NewsItem[] = cartoes.map(comMateria);
+
 /** Matérias da redação que continuam no ar (os links já circularam). */
 export const archive = [
   { to: '/noticias/cop30', dateLabel: 'Nov 2025', title: 'COP30 transforma Belém em vitrine da Amazônia' },
   { to: '/noticias/gomoov-99food', dateLabel: 'Out 2025', title: 'GoMoov e 99Food levam bicicletas elétricas para entregadores em Goiânia' },
 ];
+
+/** Todas as matérias da redação, a de destaque primeiro. */
+export const todas: NewsItem[] = [featured, ...news];
+export const noticiaPorId = (id?: string) => todas.find((n) => n.id === id);

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
 /*
- * Peças da galeria: a etiqueta de parede, o cabeçalho de cada sala, a obra em que o número é a imagem e a linha de
- * fontes das notícias.
+ * Peças da galeria: a etiqueta de parede, o cabeçalho de cada sala, as setas da fileira e a obra em que o número é a
+ * imagem.
  */
 
 /** Etiqueta de parede, como a de museu: título e ano, ficha técnica em mono, um texto curto, o acervo. */
@@ -34,15 +34,16 @@ export const WallLabel: React.FC<{
   </div>
 );
 
-/** "Sala 03 · Notícias": o número da sala em mono, o nome em Archivo larga, um fio por cima. */
+/** "Sala 03 · Notícias": o número da sala em mono, o nome em Archivo larga, um fio por cima (sem fio: quem chama desenha). */
 export const RoomHeader: React.FC<{
   number: string;
   title: string;
   tone?: 'claro' | 'escuro';
+  rule?: boolean;
   children?: React.ReactNode;
-}> = ({ number, title, tone = 'claro', children }) => (
+}> = ({ number, title, tone = 'claro', rule = true, children }) => (
   <div
-    className={`flex flex-wrap items-end justify-between gap-x-10 gap-y-6 border-t pt-5 ${
+    className={`flex flex-wrap items-end justify-between gap-x-10 gap-y-6 ${rule ? 'border-t pt-5' : ''} ${
       tone === 'escuro' ? 'border-white/25' : 'border-marinho/25'
     }`}
   >
@@ -106,6 +107,8 @@ export const NewsArtwork: React.FC<{
   credit?: string;
   /** Altura mínima da faixa (ex.: 'min-h-[31cqw]'): numa fileira, as manchetes começam na mesma linha. */
   bandClass?: string;
+  /** Classes do quadro da foto (ex.: um teto de altura pela tela; a foto recorta pelo centro). */
+  imageClass?: string;
   /** Tamanho da legenda da faixa em cqw: o mesmo numa fileira, para as legendas quebrarem igual em qualquer tela. */
   captionSize?: number;
   /**
@@ -114,14 +117,14 @@ export const NewsArtwork: React.FC<{
    */
   stretch?: boolean;
   className?: string;
-}> = ({ image, alt, outline = '', solid, caption, field = 'marinho', ratio = '4 / 3', credit = 'Ilustração BVM12', bandClass = '', captionSize = 1.9, stretch = false, className = '' }) => {
+}> = ({ image, alt, outline = '', solid, caption, field = 'marinho', ratio = '4 / 3', credit = 'Ilustração BVM12', bandClass = '', imageClass = '', captionSize = 1.9, stretch = false, className = '' }) => {
   const chars = (outline + solid).length;
   const size = Math.min(15, 62 / (0.7 * chars));
   const strong = field === 'marinho' ? '#4ADE80' : '#142B4D';
   return (
     <figure className={`obra-numero ${stretch ? 'lg:flex lg:h-full lg:flex-col' : ''} ${className}`}>
       <div
-        className={`relative w-full overflow-hidden bg-marinho ${stretch ? 'lg:!aspect-auto lg:min-h-[200px] lg:flex-1' : ''}`}
+        className={`relative w-full overflow-hidden bg-marinho ${stretch ? 'lg:!aspect-auto lg:min-h-[200px] lg:flex-1' : ''} ${imageClass}`}
         style={{ aspectRatio: ratio }}
       >
         {/* Absoluta: a foto não entra na conta da altura, quem manda é o quadro (proporção, ou a coluna ao lado). */}
@@ -147,19 +150,3 @@ export const NewsArtwork: React.FC<{
     </figure>
   );
 };
-
-/** "Fonte: Agência Brasil ↗" — links para a matéria original, em mono. */
-export const Sources: React.FC<{ sources: Array<{ name: string; url: string }>; className?: string }> = ({ sources, className = '' }) => (
-  <p className={`font-mono text-[12px] uppercase tracking-[0.08em] ${className}`}>
-    <span className="opacity-70">{sources.length > 1 ? 'Fontes: ' : 'Fonte: '}</span>
-    {sources.map((s, i) => (
-      <React.Fragment key={s.url}>
-        {i > 0 && <span className="opacity-70"> · </span>}
-        <a href={s.url} target="_blank" rel="noopener noreferrer" className="sublinhado">
-          {s.name}
-          <span aria-hidden="true">{'\u00a0'}↗</span>
-        </a>
-      </React.Fragment>
-    ))}
-  </p>
-);

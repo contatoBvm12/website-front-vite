@@ -4,8 +4,10 @@ import Encontro from '../marca/Encontro';
 
 const PAGES = [
   { to: '/', label: 'Início' },
+  { to: '/noticias', label: 'Notícias' },
+  { to: '/series-e-filmes', label: 'Séries e filmes' },
+  { to: '/receitas', label: 'Receitas sustentáveis' },
   { to: '/#indice', label: 'Índice' },
-  { to: '/#noticias', label: 'Notícias' },
   { to: '/sobre', label: 'Sobre' },
   { to: '/login', label: 'Área do Cliente' },
 ];

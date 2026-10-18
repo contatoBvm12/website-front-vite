@@ -2,37 +2,16 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Ticker from '../components/Ticker';
 import NewsCard from '../components/NewsCard';
-import { NewsArtwork, RoomHeader, ScrollArrows, Sources, WallLabel } from '../components/Gallery';
+import { NewsArtwork, RoomHeader, ScrollArrows, WallLabel } from '../components/Gallery';
 import Encontro from '../marca/Encontro';
 import { archive, featured, news } from '../data/news';
+import { titulos } from '../data/assistir';
+import { receitas } from '../data/receitas';
 
 /*
  * A home é uma galeria: a entrada (díptico: o título na parede verde, o encontro das águas no painel marinho) e cinco salas numeradas,
  * alternando campos chapados de marinho e verde com a névoa para ler. Cada obra tem a sua etiqueta de parede.
  */
-
-// Títulos conferidos em 17/10/2026 nas páginas oficiais brasileiras (Disney+, Apple TV); imagens de divulgação das
-// plataformas, com crédito. Os nomes são os da arte oficial no Brasil. Na fileira, todo título cabe numa linha e toda
-// descrição ocupa três: mantenha as descrições com 121–128 caracteres.
-const streamingCollection = [
-  { id: 'territorio', platform: 'Disney+', type: 'Filme', title: 'O Território', description: 'O povo Uru-eu-wau-wau enfrenta invasores e desmatamento na Amazônia; boa parte das imagens foi filmada pelos próprios indígenas.', image: '/fotos/assistir-territorio.jpg' },
-  { id: 'extrapolations', platform: 'Apple TV+', type: 'Série', title: 'Extrapolations: Um Futuro Inquietante', description: 'Oito histórias interligadas, ao longo de 33 anos, mostram como a mudança do clima vai mexer com a família, o trabalho e a fé.', image: '/fotos/assistir-extrapolations.jpg' },
-  { id: 'attenborough', platform: 'Netflix', type: 'Filme', title: 'David Attenborough e Nosso Planeta', description: 'O naturalista revê a própria carreira, o que viu a natureza perder ao longo de uma vida e como ela ainda pode se recuperar.', image: '/fotos/assistir-attenborough.jpg' },
-  { id: 'seremos-historia', platform: 'Disney+', type: 'Filme', title: 'Seremos História?', description: 'Leonardo DiCaprio percorre o mundo na linha de frente da crise do clima e conversa com cientistas e líderes no centro da causa.', image: '/fotos/assistir-before-the-flood.jpg' },
-  { id: 'ano-terra', platform: 'Apple TV+', type: 'Filme', title: 'O Ano em que a Terra Mudou', description: 'Com narração de David Attenborough, o filme mostra como a natureza reagiu quando o mundo parou durante a pandemia de 2020.', image: '/fotos/assistir-ano-terra.jpg' },
-  { id: 'solo-fertil', platform: 'Prime Video', type: 'Filme', title: 'Solo Fértil', description: 'Cientistas, agricultores e ativistas defendem a recuperação do solo como uma ferramenta poderosa contra a mudança do clima.', image: '/fotos/assistir-solo-fertil.jpg' },
-  { id: 'artico', platform: 'Disney+', type: 'Filme', title: 'Ártico Ameaçado', description: 'Com o gelo do Ártico derretendo, os povos indígenas da região lutam pela terra e pelo mar de que sempre dependeram para viver.', image: '/fotos/assistir-last-ice.jpg' },
-  { id: 'curta-essa', platform: 'Netflix', type: 'Série', title: 'Curta Essa com Zac Efron', description: 'Zac Efron e o especialista em bem-estar Darin Olien rodam o mundo atrás de jeitos mais saudáveis e sustentáveis de viver.', image: '/fotos/assistir-zac-efron.jpg' },
-];
-
-// Cozinhas que vivem da floresta em pé. Fotos geradas para a BVM12 no campo de cor da marca. Descrições com 86–93
-// caracteres: três linhas no desktop (quatro lado a lado) e duas no tablet (duas lado a lado).
-const recipes = [
-  { title: 'Tacacá', place: 'Amazônia brasileira', description: 'Caldo de tucupi com goma de tapioca, jambu e camarão seco, servido bem quente na cuia.', image: '/fotos/receita-tacaca.jpg' },
-  { title: 'Juane', place: 'Amazônia peruana', description: 'Arroz com cúrcuma, frango, ovo e azeitona, em folha de bijao; o prato da festa de San Juan.', image: '/fotos/receita-juane.jpg' },
-  { title: 'Liboké de peixe', place: 'Bacia do Congo', description: 'Peixe de rio com tomate e pimenta, cozido em folhas, com chikwangue, o pão de mandioca.', image: '/fotos/receita-liboke.jpg' },
-  { title: 'Sopa de milpa', place: 'México', description: 'Milho, abóbora e feijão, os frutos da milpa, o roçado que alimenta a Mesoamérica há milênios.', image: '/fotos/receita-milpa.jpg' },
-];
 
 // Valores fixos, os mesmos do site anterior.
 const marketStats = [
@@ -154,8 +133,8 @@ const Home: React.FC = () => {
         <div className="flex flex-col justify-center py-16 pl-[var(--borda)] pr-[var(--margem)] lg:py-[clamp(32px,5.5svh,72px)] lg:pr-14">
           <p className="olho">Manaus, {today}</p>
           <h1 className="titulo mt-[clamp(16px,3svh,24px)] text-[clamp(44px,min(5.2vw,10.4svh),92px)]">
-            <span className="block">Futuro sustentável</span>
-            <span className="block">não é discurso.</span>
+            <span className="block">Futuro sustentável</span>{' '}
+            <span className="block">não é discurso.</span>{' '}
             <span className="block">É classe de ativo.</span>
           </h1>
           <p className="mt-[clamp(20px,4svh,32px)] max-w-[30ch] font-serif text-[clamp(18px,min(1.6vw,3.6svh),25px)] leading-snug">
@@ -184,22 +163,33 @@ const Home: React.FC = () => {
         </figure>
       </section>
 
-      {/* Sala 01 · Em destaque */}
-      {/* As salas não levam scroll-mt: o scroll-padding-top do html já desconta o cabeçalho (somados, sobrava uma faixa da sala anterior). */}
+      {/*
+        Sala 01 · Em destaque. As salas não levam scroll-mt: o scroll-padding-top do html já desconta o cabeçalho.
+        A obra sobe até o nome da sala (o lado direito do título ficava vazio) e tem teto pela altura da tela: no
+        notebook, foto e faixa do número cabem inteiras; em tela alta, acompanham o texto e terminam com ele.
+      */}
       <section id="destaque" className="bg-nevoa py-[var(--sala-y)]">
         <div className="contenedor">
-          <RoomHeader number="01" title="Em destaque" />
-          <div className="mt-[var(--sala-vao)] grid gap-x-14 gap-y-10 lg:grid-cols-12">
-            <article className="lg:col-span-6">
-              <p className="olho text-ardosia">
-                {featured.section} · <time dateTime={featured.date}>{featured.dateLabel}</time>
-              </p>
-              <h3 className="manchete mt-5 text-[clamp(34px,min(3.9vw,7.4svh),58px)]">{featured.title}</h3>
-              <p className="leitura mt-6 text-ardosia">{featured.summary}</p>
-              {featured.aside && <p className="leitura mt-4 italic text-ardosia">{featured.aside}</p>}
-              <Sources sources={featured.sources} className="mt-8" />
-            </article>
+          <div className="grid gap-x-14 gap-y-10 border-t border-marinho/25 pt-5 lg:grid-cols-12">
             <div className="lg:col-span-6">
+              <RoomHeader number="01" title="Em destaque" rule={false} />
+              <article className="mt-[var(--sala-vao)]">
+                <p className="olho text-ardosia">
+                  {featured.section} · <time dateTime={featured.date}>{featured.dateLabel}</time>
+                </p>
+                <h3 className="manchete mt-5 text-[clamp(34px,min(3.9vw,7.4svh),58px)]">
+                  <Link to={`/noticias/${featured.id}`} className="hover:underline hover:decoration-2 hover:underline-offset-[6px]">
+                    {featured.title}
+                  </Link>
+                </h3>
+                <p className="leitura mt-6 text-ardosia">{featured.summary}</p>
+                {featured.aside && <p className="leitura mt-4 italic text-ardosia">{featured.aside}</p>}
+                <Link to={`/noticias/${featured.id}`} className="olho mt-8 inline-flex items-center gap-3 border-b-2 border-marinho pb-1.5">
+                  Ler a matéria <span aria-hidden="true">→</span>
+                </Link>
+              </article>
+            </div>
+            <div className="lg:col-span-6 lg:max-h-[calc(100svh_-_var(--topo)_-_3rem)]">
               <NewsArtwork
                 image={featured.image}
                 alt={featured.imageAlt}
@@ -297,9 +287,12 @@ const Home: React.FC = () => {
       <section id="noticias" className="bg-nevoa py-[var(--sala-y)]">
         <div className="contenedor">
           <RoomHeader number="03" title="Notícias">
-            <p className="max-w-[38ch] font-serif text-[18px] leading-snug text-ardosia">
-              O que move a economia verde, em resumos da redação com link para a fonte.
-            </p>
+            <div>
+              <p className="max-w-[38ch] font-serif text-[18px] leading-snug text-ardosia">O que move a economia verde, nas matérias da redação.</p>
+              <Link to="/noticias" className="olho mt-5 inline-flex items-center gap-3 border-b-2 border-marinho pb-1.5">
+              Todas as notícias <span aria-hidden="true">→</span>
+            </Link>
+            </div>
           </RoomHeader>
           <div className="mt-[var(--sala-vao)] grid gap-x-10 gap-y-16 md:grid-cols-6">
             {news.map((item, i) => (
@@ -338,10 +331,13 @@ const Home: React.FC = () => {
           <p className="mt-[clamp(16px,3svh,24px)] max-w-[46ch] text-pretty font-serif text-[19px] leading-snug text-white/80">
             Filmes e séries sobre clima, floresta e o que fazemos com eles.
           </p>
+          <Link to="/series-e-filmes" className="olho mt-5 inline-flex items-center gap-3 border-b-2 border-verde pb-1.5">
+              Toda a programação <span aria-hidden="true">→</span>
+            </Link>
         </div>
         <div id="projecao" className="fileira-trilho sem-barra mt-[var(--sala-vao)] flex snap-x snap-mandatory gap-8 overflow-x-auto pb-2">
-          {streamingCollection.map((item) => (
-            <article key={item.id} className="fileira-obra ficha shrink-0 snap-start">
+          {titulos.map((item) => (
+            <Link key={item.id} to={`/series-e-filmes/${item.id}`} className="fileira-obra ficha group block shrink-0 snap-start">
               <figure>
                 <div className="aspect-video overflow-hidden bg-white/5">
                   <img src={item.image} alt={`Arte de divulgação de ${item.title}`} loading="lazy" className="h-full w-full object-cover" />
@@ -353,9 +349,9 @@ const Home: React.FC = () => {
               <p className="olho mt-3 text-verde">
                 {item.platform} · {item.type}
               </p>
-              <h3 className="mt-2 whitespace-nowrap text-[5.2cqw] font-bold leading-tight">{item.title}</h3>
+              <h3 className="mt-2 whitespace-nowrap text-[5.2cqw] font-bold leading-tight group-hover:underline group-hover:underline-offset-4">{item.title}</h3>
               <p className="ficha-serifa mt-2 font-serif text-[4.8cqw] leading-snug text-white/75">{item.description}</p>
-            </article>
+            </Link>
           ))}
         </div>
       </section>
@@ -364,20 +360,27 @@ const Home: React.FC = () => {
       <section className="bg-verde py-[var(--sala-y)] text-marinho">
         <div className="contenedor">
           <RoomHeader number="05" title="Para cozinhar">
-            <p className="max-w-[36ch] font-serif text-[19px] leading-snug">
-              Pratos de cozinhas que vivem da floresta em pé: Amazônia, Bacia do Congo e a milpa mexicana.
-            </p>
+            <div>
+              <p className="max-w-[36ch] font-serif text-[19px] leading-snug">
+                Pratos de cozinhas que vivem da floresta em pé: Amazônia, Bacia do Congo e a milpa mexicana.
+              </p>
+              <Link to="/receitas" className="olho mt-5 inline-flex items-center gap-3 border-b-2 border-marinho pb-1.5">
+              Todas as receitas <span aria-hidden="true">→</span>
+            </Link>
+            </div>
           </RoomHeader>
           <div className="mt-[var(--sala-vao)] grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-4">
-            {recipes.map((r) => (
-              <article key={r.title} className="ficha">
+            {receitas.map((r) => (
+              <Link key={r.id} to={`/receitas/${r.id}`} className="ficha group block">
                 <div className="moldura">
                   <img src={r.image} alt={`${r.title}, prato da ${r.place}`} loading="lazy" className="aspect-[4/3] w-full object-cover" />
                 </div>
                 <p className="olho mt-6">{r.place}</p>
-                <h3 className="mt-2 whitespace-nowrap text-[23px] font-bold leading-tight lg:text-[7.6cqw]">{r.title}</h3>
+                <h3 className="mt-2 whitespace-nowrap text-[23px] font-bold leading-tight group-hover:underline group-hover:underline-offset-4 lg:text-[7.6cqw]">
+                  {r.title}
+                </h3>
                 <p className="ficha-serifa mt-2 font-serif text-[17px] leading-snug md:text-[4.6cqw] lg:text-[6.4cqw]">{r.description}</p>
-              </article>
+              </Link>
             ))}
           </div>
           <p className="mt-12 font-mono text-[11px] uppercase tracking-[0.08em] text-marinho/70">Imagens: ilustrações BVM12</p>
