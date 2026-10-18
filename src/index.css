@@ -2,15 +2,115 @@
 @tailwind components;
 @tailwind utilities;
 
-@keyframes marquee {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+/*
+ * BVM12 · a galeria. Marca recriada (deliverables/bvm12-marca/MARCA.md): marinho e verde em campos chapados, névoa
+ * para ler. A galeria fala em Archivo larga (salas, títulos, números); o jornal fala em Newsreader (manchetes e texto
+ * de ler); etiquetas e cotações em IBM Plex Mono. Verde nunca é texto sobre névoa; vermelho só em número negativo,
+ * sobre marinho.
+ */
+:root {
+  --margem: clamp(20px, 5.5vw, 88px);
+  --topo: 64px;
+  /*
+   * Notebook é largo e baixo (1280 × 590 a 150%): o que é grande — título, número, arte, o ar entre as salas — cresce
+   * pela largura E pela altura, o que for menor. Em monitor grande nada muda; no notebook a sala cabe na tela.
+   */
+  --sala-y: clamp(48px, 11svh, 112px);
+  --sala-vao: clamp(28px, 6svh, 48px);
+  /* A borda esquerda do contenedor, para o que sangra até a janela (fileira de filmes, díptico). cqw: sem a barra de rolagem. */
+  --borda: max(var(--margem), (100cqw - 1320px) / 2);
 }
 
-.animate-marquee {
-  animation: marquee 30s linear infinite;
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: var(--topo); -webkit-text-size-adjust: 100%; }
+  body { @apply bg-nevoa font-sans text-marinho antialiased; font-optical-sizing: auto; }
+  ::selection { background: #4ADE80; color: #142B4D; }
+  :focus-visible { outline: 3px solid #142B4D; outline-offset: 3px; }
+  .campo-marinho :focus-visible { outline-color: #4ADE80; }
 }
 
-.hide-scrollbar::-webkit-scrollbar { display: none; }
-.hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+@layer components {
+  .contenedor { width: min(100% - 2 * var(--margem), 1320px); margin-inline: auto; }
 
+  /* A galeria */
+  .titulo { font-weight: 800; font-stretch: 112%; letter-spacing: -0.035em; line-height: 0.98; }
+  .titulo-largo { font-weight: 800; font-stretch: 125%; letter-spacing: -0.055em; line-height: 0.9; }
+  .olho { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; }
+
+  /* O jornal */
+  .manchete { font-family: 'Newsreader', Georgia, serif; font-weight: 600; letter-spacing: -0.012em; line-height: 1.08; }
+  .leitura { font-family: 'Newsreader', Georgia, serif; font-size: clamp(18px, 1.3vw, 20.5px); line-height: 1.62; }
+
+  /* Obras na parede: passe-partout branco e a sombra de quem está pendurado */
+  .moldura { background: #fff; padding: clamp(8px, 0.9vw, 14px); box-shadow: 0 1px 0 rgba(20, 43, 77, 0.06), 0 28px 50px -34px rgba(20, 43, 77, 0.55); }
+  .pendurada { box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08), 0 44px 70px -40px rgba(10, 22, 40, 0.8); }
+
+  .sublinhado { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 5px; }
+  .sublinhado:hover { text-decoration-thickness: 3px; }
+
+  /*
+   * A fileira de filmes: começa na margem do contenedor, e as obras cabem inteiras nele (1, 2 ou 3 por vez); a seguinte
+   * espia pela borda direita, avisando que tem mais.
+   */
+  .fileira { container-type: inline-size; }
+  .fileira-trilho { padding-inline: var(--borda); scroll-padding-inline: var(--borda); }
+  .fileira-obra { width: min(82cqw, 400px); }
+  @media (min-width: 768px) { .fileira-obra { width: calc((min(100cqw - 2 * var(--margem), 1320px) - 2rem) / 2); } }
+  @media (min-width: 1024px) { .fileira-obra { width: calc((min(100cqw - 2 * var(--margem), 1320px) - 4rem) / 3); } }
+
+  /*
+   * Ficha: o texto de um cartão que fica lado a lado com outros (notícia, filme, receita). O tamanho segue a largura do
+   * cartão (cqw), então as quebras de linha são as mesmas em qualquer tela; com textos do mesmo comprimento, os títulos
+   * de uma fileira ocupam o mesmo número de linhas, e os resumos também. A serifa fica num tamanho óptico fixo pelo
+   * mesmo motivo (com o automático, a largura das letras mudaria com o tamanho).
+   */
+  .ficha { container-type: inline-size; }
+  .ficha-serifa { font-optical-sizing: none; font-variation-settings: 'opsz' 18; }
+  .ficha-manchete { font-optical-sizing: none; font-variation-settings: 'opsz' 30; }
+
+  /* O número é a imagem: cabe no quadro pelo container (cqw) */
+  .obra-numero { container-type: inline-size; }
+  .contorno { color: transparent; -webkit-text-stroke-width: 0.03em; }
+
+  /* Corpo das matérias */
+  .materia > * + * { margin-top: 1.05em; }
+  .materia h2 { font-family: 'Archivo', Arial, sans-serif; font-weight: 800; font-stretch: 112%; letter-spacing: -0.02em; font-size: 1.3em; line-height: 1.15; margin-top: 2.2em; color: #142B4D; }
+  .materia ul { list-style: none; padding: 0; }
+  .materia li { position: relative; padding-left: 1.3em; }
+  .materia li + li { margin-top: 0.55em; }
+  .materia li::before { content: ''; position: absolute; left: 0; top: 0.62em; width: 0.4em; height: 0.4em; background: #142B4D; }
+  .materia strong { font-weight: 650; color: #142B4D; }
+}
+
+/* Cotações correndo: quatro cópias, anda metade (duas cópias) e recomeça sem emenda */
+@keyframes correr { to { transform: translateX(-50%); } }
+.correr { display: flex; width: max-content; animation: correr 70s linear infinite; }
+.correr:hover { animation-play-state: paused; }
+
+.sem-barra { scrollbar-width: none; }
+.sem-barra::-webkit-scrollbar { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .correr { animation: none; }
+}
+
+/*
+ * Corpo das matérias das salas (Corpo em components/Sala.tsx): coluna de leitura de jornal, capitular em Archivo, a
+ * citação grande com o fio verde, e a faixa de números que sai da coluna.
+ */
+.corpo { font-family: 'Newsreader', Georgia, serif; font-size: clamp(18px, 1.3vw, 20.5px); line-height: 1.65; color: #334155; }
+.corpo > * { max-width: 40rem; margin-inline: auto; }
+.corpo > * + * { margin-top: 1.1em; }
+.corpo h2 { font-family: 'Archivo', Arial, sans-serif; font-weight: 800; font-stretch: 112%; letter-spacing: -0.02em; font-size: 1.45em; line-height: 1.12; margin-top: 2.1em; color: #142B4D; }
+.corpo ul { list-style: none; padding: 0; }
+.corpo li { position: relative; padding-left: 1.3em; }
+.corpo li + li { margin-top: 0.55em; }
+.corpo li::before { content: ''; position: absolute; left: 0; top: 0.62em; width: 0.4em; height: 0.4em; background: #142B4D; }
+.capitular::first-letter { float: left; font-family: 'Archivo', Arial, sans-serif; font-weight: 800; font-stretch: 112%; font-size: 4.1em; line-height: 0.8; margin: 0.08em 0.1em 0 0; color: #142B4D; }
+.corpo blockquote { margin-top: 2em; margin-bottom: 2em; border-left: 6px solid #4ADE80; padding-left: 1.2em; }
+.corpo blockquote p { font-family: 'Archivo', Arial, sans-serif; font-weight: 700; font-stretch: 106%; letter-spacing: -0.02em; font-size: 1.5em; line-height: 1.2; color: #142B4D; }
+.corpo blockquote footer { margin-top: 0.8em; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #334155; }
+.corpo .numeros { max-width: 64rem; margin-top: 2.4em; margin-bottom: 2.4em; display: grid; gap: 1.5rem 2.5rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); border-top: 1px solid rgba(20, 43, 77, 0.25); padding-top: 1.4rem; }
+.corpo .numeros dt { font-size: clamp(36px, 4.4vw, 64px); line-height: 1; color: #142B4D; }
+.corpo .numeros dd { margin-top: 0.6rem; font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.5; letter-spacing: 0.06em; text-transform: uppercase; color: #334155; }
